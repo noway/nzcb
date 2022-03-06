@@ -20,6 +20,19 @@ contract Greeter is ERC721 {
         greeting = _greeting;
     }
 
+    function mint(
+            uint[2] memory a,
+            uint[2][2] memory b,
+            uint[2] memory c,
+            uint[3] memory input, uint256 toBeSignedHash, uint256 r, uint256 s) public payable {
+
+        uint mintIndex = totalSupply();
+        if (totalSupply() < 10021) {
+            _safeMint(msg.sender, mintIndex);
+        }
+    }
+
+
     function tokenURI(uint256 id) override public view returns (string memory) {
         return "https://i.imgur.com/QYKQsql.jpg";
     }
