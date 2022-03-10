@@ -7,13 +7,14 @@ describe("Greeter", function () {
     const greeter = await Greeter.deploy("NZ COVID Badge", "NZCP");
     await greeter.deployed();
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+    // expect(
+    const setGreetingTx = await greeter.mint([0,0],[[0,0],[0,0]],[0,0],[0,0,0],0,0,0)//).to.equal("Hello, world!");
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
+    // const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
 
     // wait until the transaction is mined
     await setGreetingTx.wait();
 
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+    expect(await greeter.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
   });
 });

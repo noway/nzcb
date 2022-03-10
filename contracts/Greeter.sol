@@ -5,21 +5,10 @@ import "hardhat/console.sol";
 import "./ERC721.sol";
 
 contract Greeter is ERC721 {
-    string private greeting;
 
     uint public supply;
 
     constructor(string memory _name, string memory _symbol) ERC721(_name, _symbol) {
-        greeting = _name;
-    }
-
-    function greet() public view returns (string memory) {
-        return greeting;
-    }
-
-    function setGreeting(string memory _greeting) public {
-        console.log("Changing greeting from '%s' to '%s'", greeting, _greeting);
-        greeting = _greeting;
     }
 
     function totalSupply() public view returns (uint) {
@@ -39,6 +28,7 @@ contract Greeter is ERC721 {
 
 
     function tokenURI(uint256 id) override public view returns (string memory) {
+        require(id < totalSupply(), "URI query for nonexistent token");
         return "https://i.imgur.com/QYKQsql.jpg";
     }
 }
