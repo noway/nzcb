@@ -33,10 +33,8 @@ contract Greeter is ERC721 {
             uint[3] memory input, uint256 toBeSignedHash, uint256 r, uint256 s) public payable {
 
         uint mintIndex = totalSupply();
-        // if (totalSupply() < 10021) {
         _safeMint(msg.sender, mintIndex);
         supply++;
-        // }
     }
 
 
