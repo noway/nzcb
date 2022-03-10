@@ -7,6 +7,8 @@ import "./ERC721.sol";
 contract Greeter is ERC721 {
     string private greeting;
 
+    uint public supply;
+
     constructor(string memory _name, string memory _symbol) ERC721(_name, _symbol) {
         greeting = _name;
     }
@@ -20,6 +22,10 @@ contract Greeter is ERC721 {
         greeting = _greeting;
     }
 
+    function totalSupply() public view returns (uint) {
+        return supply;
+    }
+
     function mint(
             uint[2] memory a,
             uint[2][2] memory b,
@@ -27,9 +33,10 @@ contract Greeter is ERC721 {
             uint[3] memory input, uint256 toBeSignedHash, uint256 r, uint256 s) public payable {
 
         uint mintIndex = totalSupply();
-        if (totalSupply() < 10021) {
-            _safeMint(msg.sender, mintIndex);
-        }
+        // if (totalSupply() < 10021) {
+        _safeMint(msg.sender, mintIndex);
+        supply++;
+        // }
     }
 
 
