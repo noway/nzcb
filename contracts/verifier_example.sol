@@ -1,0 +1,1 @@
+../../nzcp-circom/contracts/verifier_example.sol
