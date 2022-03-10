@@ -1,6 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.11;
 
+import "hardhat/console.sol";
 import "./ERC721.sol";
 import "./verifier_example.sol";
 import "./EllipticCurve.sol";
@@ -30,10 +31,11 @@ contract Greeter is ERC721, Verifier, EllipticCurve {
         uint mintIndex = supply;
         _safeMint(msg.sender, mintIndex);
         supply++;
+        console.log("MINTED!!");
     }
 
-
     function tokenURI(uint256 id) override public view returns (string memory) {
+        console.log("supply!!",supply);
         require(id < supply, "URI query for nonexistent token");
         return "https://i.imgur.com/QYKQsql.jpg";
     }
