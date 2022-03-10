@@ -6,11 +6,11 @@ import "./ERC721.sol";
 import "./verifier_example.sol";
 import "./EllipticCurve.sol";
 
-contract Greeter is ERC721, Verifier, EllipticCurve {
+contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
     uint public supply;
 
-    constructor(string memory _name, string memory _symbol) ERC721(_name, _symbol) {}
+    constructor(string memory _name, string memory _symbol) ERC721(_name = "NZ COVID Badge", _symbol = "NZCB") {}
 
     function totalSupply() public view returns (uint) {
         return supply;

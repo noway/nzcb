@@ -1,14 +1,14 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Greeter", function () {
+describe("NZCOVIDBadge", function () {
   it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("NZ COVID Badge", "NZCP");
-    await greeter.deployed();
+    const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
+    const covidBadge = await NZCOVIDBadge.deploy("NZ COVID Badge", "NZCP");
+    await covidBadge.deployed();
 
     await expect(
-      greeter.tokenURI(0)
+      covidBadge.tokenURI(0)
     ).to.be.revertedWith("URI query for nonexistent token");
 
     const a: [bigint, bigint] = [5705644466879217538218526450492165961464580271415653572212474686262364576390n,5303178026912613573981958416327353670836432279330963733881122407748414610030n]
@@ -25,10 +25,10 @@ describe("Greeter", function () {
     const s = "0xFBA88A529F675D6686EE632B09EC581AB08F72B458904BB3396D10FA66D11477";
 
 
-    const setGreetingTx = await greeter.mint(a, b, c, input, messageHash, [r, s])
+    const setGreetingTx = await covidBadge.mint(a, b, c, input, messageHash, [r, s])
 
     await setGreetingTx.wait();
 
-    expect(await greeter.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
+    expect(await covidBadge.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
   });
 });
