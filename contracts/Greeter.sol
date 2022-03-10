@@ -27,14 +27,14 @@ contract Greeter is ERC721, Verifier, EllipticCurve {
         require(verifyProof(a, b, c, input), "Proof is not valid");
         require(validateSignature(toBeSignedHash, rs, [exampleX, exampleY]), "Invalid signature");
 
-        uint mintIndex = totalSupply();
+        uint mintIndex = supply;
         _safeMint(msg.sender, mintIndex);
         supply++;
     }
 
 
     function tokenURI(uint256 id) override public view returns (string memory) {
-        require(id < totalSupply(), "URI query for nonexistent token");
+        require(id < supply, "URI query for nonexistent token");
         return "https://i.imgur.com/QYKQsql.jpg";
     }
 }
