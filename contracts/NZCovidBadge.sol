@@ -50,11 +50,12 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             // from here: https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
             uint64 ib = uint64(uint8(i1[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
+            bytes1 bi = bytes1(uint8(ib));
             if (i < 1) {
-                credSubjHash[31 + i] = bytes1(uint8(ib));
+                credSubjHash[31 + i] = bi;
             }
             else {
-                toBeSignedHash[i - 1] = bytes1(uint8(ib));
+                toBeSignedHash[i - 1] = bi;
             }
             unchecked { ++i; }
         }
@@ -63,8 +64,9 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             // from here: https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
             uint64 ib = uint64(uint8(i2[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
+            bytes1 bi = bytes1(uint8(ib));
             if (i < 2) {
-                toBeSignedHash[30 + i] = bytes1(uint8(ib));
+                toBeSignedHash[30 + i] = bi;
             }
             else if (i < 6) {
                 // getting the bytes in the following order:
@@ -77,8 +79,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
                 expBytes[i - 2 + 28] = bytes1(uint8(i2[26 + (i - 2)]));
             }
             else {
-                dataBytes[i - 6] = bytes1(uint8(ib));
-
+                dataBytes[i - 6] = bi;
             }
 
             unchecked { ++i; }
