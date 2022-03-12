@@ -114,11 +114,10 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         require(verifyProof(a, b, c, input), "Proof is not valid");
         require(validateSignature(toBeSignedHash, rs, [0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD, 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D]), "Invalid signature");
         require(block.timestamp < _exp, "Expiration date has passed");
-        require(msg.sender == addr, "Invalid address");
         require(minted[credSubjHash] == false, "Already minted");
 
         minted[credSubjHash] = true;
-        _safeMint(msg.sender, supply);
+        _safeMint(addr, supply);
         supply++;
     }
 
