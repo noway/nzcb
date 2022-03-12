@@ -30,7 +30,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         bytes memory addrBytes = new bytes(20);
 
         uint256 i;
-        uint64 ib;
+        uint256 ib;
         bytes1 bi;
 
         // Extract 31 bytes of data from every signal
@@ -38,14 +38,14 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             // Here and bellow:
             // Reverse bits of every byte in input to get the data.
             // From here https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
-            ib = uint64(uint8(input0[31 - i]));
+            ib = uint256(uint8(input0[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
             // copy over first 31 bytes of credSubjHash
             credSubjHash[i] = bytes1(uint8(ib));
             unchecked { ++i; }
         }
         for (i = 0; i < 31;) {
-            ib = uint64(uint8(input1[31 - i]));
+            ib = uint256(uint8(input1[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
             bi = bytes1(uint8(ib));
             // copy over the last byte of credSubjHash
@@ -59,7 +59,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             unchecked { ++i; }
         }
         for (i = 0; i < 31;) {
-            ib = uint64(uint8(input2[31 - i]));
+            ib = uint256(uint8(input2[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
             bi = bytes1(uint8(ib));
             // copy over the last 2 bytes of toBeSignedHash
