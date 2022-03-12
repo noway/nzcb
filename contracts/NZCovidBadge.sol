@@ -8,7 +8,6 @@ import "./EllipticCurve.sol";
 
 // TODO: only 1 mint per credSubjHash
 // TODO: check address
-// TODO: check exp
 
 contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
