@@ -117,8 +117,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         require(minted[credSubjHash] == 0, "Already minted");
 
         minted[credSubjHash] = 1;
-        _safeMint(addr, supply);
-        supply++;
+        _safeMint(addr, supply++);
     }
 
     function tokenURI(uint256 id) override public view returns (string memory) {
