@@ -34,13 +34,15 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         bytes memory credSubjHash = new bytes(32);
         bytes memory toBeSignedHash = new bytes(32);
         bytes memory expBytes = new bytes(32);
-        bytes memory dataBytes = new bytes(25);
+        // bytes memory dataBytes = new bytes(25);
 
         uint256 i;
+        uint64 ib;
+        bytes1 bi;
         for (i = 0; i < 31;) {
             // reverse bits
             // from here: https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
-            uint64 ib = uint64(uint8(i0[31 - i]));
+            ib = uint64(uint8(i0[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
             credSubjHash[i] = bytes1(uint8(ib));
             unchecked { ++i; }
@@ -48,9 +50,9 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         for (i = 0; i < 31;) {
             // reverse bits
             // from here: https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
-            uint64 ib = uint64(uint8(i1[31 - i]));
+            ib = uint64(uint8(i1[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
-            bytes1 bi = bytes1(uint8(ib));
+            bi = bytes1(uint8(ib));
             if (i < 1) {
                 credSubjHash[31 + i] = bi;
             }
@@ -62,9 +64,9 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         for (i = 0; i < 31;) {
             // reverse bits
             // from here: https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
-            uint64 ib = uint64(uint8(i2[31 - i]));
+            ib = uint64(uint8(i2[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
-            bytes1 bi = bytes1(uint8(ib));
+            bi = bytes1(uint8(ib));
             if (i < 2) {
                 toBeSignedHash[30 + i] = bi;
             }
@@ -79,7 +81,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
                 expBytes[i - 2 + 28] = bytes1(uint8(i2[26 + (i - 2)]));
             }
             else {
-                dataBytes[i - 6] = bi;
+                // dataBytes[i - 6] = bi;
             }
 
             unchecked { ++i; }
@@ -90,15 +92,15 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         assembly {
             _exp := mload(add(expBytes, 0x20))
         }
-        console.log(_exp);
-        console.logBytes(expBytes);
+        // console.log(_exp);
+        // console.logBytes(expBytes);
         // console.logBytes32(i1[31]);
         // console.logBytes32(i2[31]);
-        uint exampleX = 0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD;
-        uint exampleY = 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D;
+        // uint exampleX = 0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD;
+        // uint exampleY = 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D;
 
-        // require(verifyProof(a, b, c, input), "Proof is not valid");
-        // require(validateSignature(bytes32(toBeSignedHash), rs, [exampleX, exampleY]), "Invalid signature");
+        require(verifyProof(a, b, c, input), "Proof is not valid");
+        require(validateSignature(bytes32(toBeSignedHash), rs, [0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD, 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D]), "Invalid signature");
 
         // uint mintIndex = ;
         _safeMint(msg.sender, supply);
