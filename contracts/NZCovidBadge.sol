@@ -85,23 +85,15 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
             unchecked { ++i; }
         }
-        // console.logBytes(toBeSignedHash);
-        // bytes32 expB = bytes32(expBytes);
+
         uint256 _exp;
         assembly {
             _exp := mload(add(expBytes, 0x20))
         }
-        // console.log(_exp);
-        // console.logBytes(expBytes);
-        // console.logBytes32(i1[31]);
-        // console.logBytes32(i2[31]);
-        // uint exampleX = 0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD;
-        // uint exampleY = 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D;
 
         require(verifyProof(a, b, c, input), "Proof is not valid");
         require(validateSignature(bytes32(toBeSignedHash), rs, [0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD, 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D]), "Invalid signature");
 
-        // uint mintIndex = ;
         _safeMint(msg.sender, supply);
         supply++;
         console.log("MINTED!!");
