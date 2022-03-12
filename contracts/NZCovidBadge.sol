@@ -6,7 +6,6 @@ import "./ERC721.sol";
 import "./verifier_example.sol";
 import "./EllipticCurve.sol";
 
-// TODO: get toBeSignedHash from input
 // TODO: only 1 mint per credSubjHash
 // TODO: check address
 // TODO: check exp
