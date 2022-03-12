@@ -31,7 +31,6 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
         uint256 i;
         uint256 ib;
-        bytes1 bi;
 
         // Extract 31 bytes of data from every signal
         for (i = 0; i < 31;) {
@@ -47,24 +46,22 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         for (i = 0; i < 31;) {
             ib = uint256(uint8(input1[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
-            bi = bytes1(uint8(ib));
             // copy over the last byte of credSubjHash
             if (i < 1) {
-                credSubjHash[31 + i] = bi;
+                credSubjHash[31 + i] = bytes1(uint8(ib));
             }
             // copy over the first 30 bytes of toBeSignedHash
             else {
-                toBeSignedHash[i - 1] = bi;
+                toBeSignedHash[i - 1] = bytes1(uint8(ib));
             }
             unchecked { ++i; }
         }
         for (i = 0; i < 31;) {
             ib = uint256(uint8(input2[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
-            bi = bytes1(uint8(ib));
             // copy over the last 2 bytes of toBeSignedHash
             if (i < 2) {
-                toBeSignedHash[30 + i] = bi;
+                toBeSignedHash[30 + i] = bytes1(uint8(ib));
             }
             // copy over exp value
             else if (i < 6) {
@@ -79,7 +76,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             }
             // copy over the address
             else if (i < 26) {
-                addrBytes[i - 6] = bi;
+                addrBytes[i - 6] = bytes1(uint8(ib));
             }
             unchecked { ++i; }
         }
