@@ -75,7 +75,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
                 // byte #29
                 // then putting them at the very end of uint256 expBytes
                 // that way, we can read those bytes as uint256 exp
-                expBytes[i - 2 + 28] = bytes1(uint8(input2[26 + (i - 2)]));
+                expBytes[i + 26] = bytes1(uint8(input2[24 + i]));
             }
             // copy over the address
             else if (i < 26) {
