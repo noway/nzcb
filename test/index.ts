@@ -28,7 +28,23 @@ const input: [bigint, bigint, bigint] = [
 const r = "0xD2E07B1DD7263D833166BDBB4F1A093837A905D7ECA2EE836B6B2ADA23C23154";
 const s = "0xFBA88A529F675D6686EE632B09EC581AB08F72B458904BB3396D10FA66D11477";
 
-describe("NZCOVIDBadge", function () {
+describe("NZCOVIDBadge only mint", function () {
+  let covidBadge: NZCOVIDBadge
+
+  before(async () => {
+    const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
+    covidBadge = await NZCOVIDBadge.deploy("NZ COVID Badge", "NZCP");
+    await covidBadge.deployed();
+  })
+
+  it("Should mint", async function () {
+    const mintTx = await covidBadge.mint(a, b, c, input, [r, s])
+    await mintTx.wait();
+  });
+});
+
+/*
+describe("NZCOVIDBadge check logic", function () {
   let covidBadge: NZCOVIDBadge
 
   before(async () => {
@@ -49,3 +65,5 @@ describe("NZCOVIDBadge", function () {
     await expect(covidBadge.mint(a, b, c, input, [r, s])).to.be.revertedWith("Already minted");
   });
 });
+
+*/
