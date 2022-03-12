@@ -19,11 +19,8 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         return supply;
     }
 
-    function mint(
-            uint256[2] memory a,
-            uint256[2][2] memory b,
-            uint256[2] memory c,
-            uint256[3] memory input, uint256[2] memory rs) public payable {
+    // some bit fiddling to get pubIdentity from the signals.
+    function getPubIdentity(uint256[3] memory input)  internal pure returns (bytes32, bytes32, uint256) {
 
         bytes32 i0 = bytes32(input[0]);
         bytes32 i1 = bytes32(input[1]);
@@ -84,19 +81,35 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
             unchecked { ++i; }
         }
-
         uint256 _exp;
         assembly {
             _exp := mload(add(expBytes, 0x20))
         }
 
+        return (bytes32(credSubjHash), bytes32(toBeSignedHash), _exp);
+    }
+
+    function mint(
+            uint256[2] memory a,
+            uint256[2][2] memory b,
+            uint256[2] memory c,
+            uint256[3] memory input, uint256[2] memory rs) public payable {
+
+        bytes32 credSubjHash;
+        bytes32 toBeSignedHash;
+        uint256 _exp;
+        (credSubjHash, toBeSignedHash, _exp) = getPubIdentity(input);
+
         require(verifyProof(a, b, c, input), "Proof is not valid");
         require(validateSignature(bytes32(toBeSignedHash), rs, [0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD, 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D]), "Invalid signature");
         require(block.timestamp < _exp, "Expiration date has passed");
+        // console.log("msg.sender",msg.sender);
+        // console.logBytes(dataBytes);
+        // require(msg.sender == )
 
         _safeMint(msg.sender, supply);
         supply++;
-        console.log("MINTED!!");
+        // console.log("MINTED!!");
     }
 
     function tokenURI(uint256 id) override public view returns (string memory) {
