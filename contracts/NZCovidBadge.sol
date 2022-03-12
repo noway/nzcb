@@ -6,8 +6,6 @@ import "./ERC721.sol";
 import "./verifier_example.sol";
 import "./EllipticCurve.sol";
 
-// TODO: only 1 mint per credSubjHash
-
 contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
     uint public supply;
