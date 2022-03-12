@@ -34,7 +34,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         bytes memory credSubjHash = new bytes(32);
         bytes memory toBeSignedHash = new bytes(32);
         bytes memory expBytes = new bytes(4);
-        bytes memory addressBytes = new bytes(20);
+        bytes memory dataBytes = new bytes(25);
 
         for (uint256 i = 0; i < 31;) {
             // reverse bits
@@ -69,12 +69,15 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
                 expBytes[i - 2] = bytes1(uint8(ib));
             }
             else {
+                dataBytes[i - 6] = bytes1(uint8(ib));
 
             }
 
             unchecked { ++i; }
         }
         console.logBytes(toBeSignedHash);
+        console.logBytes(expBytes);
+        console.logBytes(dataBytes);
         // console.logBytes32(i1[31]);
         // console.logBytes32(i2[31]);
         uint exampleX = 0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD;
