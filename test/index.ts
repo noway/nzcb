@@ -25,6 +25,8 @@ const input: [bigint, bigint, bigint] = [
   164338397576518097927300170597215522166312572986775168835286991n
 ]
 
+const credSubjHash = "5fb355822221720ea4ce6734e5a09e459d452574a19310c0cea7c141f43a3dab"
+
 const r = "0xD2E07B1DD7263D833166BDBB4F1A093837A905D7ECA2EE836B6B2ADA23C23154";
 const s = "0xFBA88A529F675D6686EE632B09EC581AB08F72B458904BB3396D10FA66D11477";
 
@@ -63,6 +65,11 @@ describe("NZCOVIDBadge check logic", function () {
   it("Should not mint again", async function () {
     expect(await covidBadge.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
     await expect(covidBadge.mint(a, b, c, input, [r, s])).to.be.revertedWith("Already minted");
+  });
+
+  it("Should show as minted for this cred subj hash", async function () {
+    expect(await covidBadge.hasMinted(credSubjHash)).to.equal(1);
+    // await expect(covidBadge.mint(a, b, c, input, [r, s])).to.be.revertedWith("Already minted");
   });
 });
 

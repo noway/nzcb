@@ -2,7 +2,7 @@
 pragma solidity ^0.8.11;
 
 import "./ERC721.sol";
-import "./verifier_example.sol";
+import "./VerifierExample.sol";
 import "./EllipticCurve.sol";
 
 contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
@@ -14,6 +14,10 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
     function totalSupply() public view returns (uint) {
         return supply;
+    }
+
+    function hasMinted(bytes32 credSubjHash) public view returns (uint256) {
+        return minted[credSubjHash];
     }
 
     // Perform bit fiddling to get pubIdentity from the signals.
