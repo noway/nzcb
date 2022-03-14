@@ -21,6 +21,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
     }
 
     // Perform bit fiddling to get pubIdentity from the signals.
+    // TODO: test this function
     function getPubIdentity(uint256[3] memory input) internal pure returns (bytes32, bytes32, uint256, address) {
 
         bytes32 input0 = bytes32(input[0]);
@@ -66,20 +67,22 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             if (i < 2) {
                 toBeSignedHash[30 + i] = bytes1(uint8(ib));
             }
-            // copy over exp value
             else if (i < 6) {
-                // getting the bytes in the following order:
-                // byte #26
-                // byte #27
+                // do nothing
+            }
+            // copy over exp value
+            else if (i < 10) {
+                // filling out the following bytes in expBytes:
                 // byte #28
                 // byte #29
-                // then putting them at the very end of uint256 expBytes
+                // byte #30
+                // byte #31
                 // that way, we can read those bytes as uint256 exp
-                expBytes[i + 26] = bytes1(uint8(input2[24 + i]));
+                expBytes[i + 22] = bytes1(uint8(input2[i]));
             }
             // copy over the address
-            else if (i < 26) {
-                addrBytes[i - 6] = bytes1(uint8(ib));
+            else if (i < 30) {
+                addrBytes[i - 10] = bytes1(uint8(ib));
             }
             unchecked { ++i; }
         }
