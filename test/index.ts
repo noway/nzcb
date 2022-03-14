@@ -62,6 +62,9 @@ describe("NZCOVIDBadge check logic", function () {
 
   it("Should show as minted for this cred subj hash", async function () {
     expect(await covidBadge.hasMinted(credSubjHash)).to.equal(1);
-    // await expect(covidBadge.mint(a, b, c, input, [r, s])).to.be.revertedWith("Already minted");
+  });
+
+  it("Should show the signer as owner for token id 0", async function () {
+    expect(await covidBadge.getOwner(0)).to.equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
   });
 });

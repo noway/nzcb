@@ -20,6 +20,10 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         return minted[credSubjHash];
     }
 
+    function getOwner(uint256 id) public view returns (address) {
+        return ownerOf[id];
+    }
+
     // Perform bit fiddling to get pubIdentity from the signals.
     // TODO: test this function
     function getPubIdentity(uint256[3] memory input) internal pure returns (bytes32, bytes32, uint256, address) {
