@@ -39,7 +39,6 @@ describe("NZCOVIDBadge only mint", function () {
   });
 });
 
-/*
 describe("NZCOVIDBadge check logic", function () {
   let covidBadge: NZCOVIDBadge
 
@@ -66,5 +65,3 @@ describe("NZCOVIDBadge check logic", function () {
     // await expect(covidBadge.mint(a, b, c, input, [r, s])).to.be.revertedWith("Already minted");
   });
 });
-
-*/
