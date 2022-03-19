@@ -16,9 +16,9 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
     }
 
     // Pederson commitment check of the credential subject hash
-    function hasMinted(uint minted_C_check, uint minted_b_check) public view returns (uint256) {
+    function hasMinted(uint minted_C_check, uint minted_r_check) public view returns (uint256) {
         for (uint i = 0; i < supply; i++) {
-            if (minted_C[i] - minted_C_check == (minted_b[i] - minted_b_check) * G) {
+            if (minted_C[i] - minted_C_check == (minted_r[i] - minted_r_check) * G) {
                 return 1;
             }
         }
@@ -122,11 +122,11 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         require(verifyProof(a, b, c, input), "Invalid proof");
         require(validateSignature(toBeSignedHash, rs, [0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD, 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D]), "Invalid signature");
         require(block.timestamp < _exp, "Pass expired");
-        require(hasMinted(C, b) == 0, "Already minted");
+        require(hasMinted(C, r) == 0, "Already minted");
 
         uint tokenIndex = supply++;
         minted_C[tokenIndex] = C;
-        minted_b[tokenIndex] = b;
+        minted_r[tokenIndex] = r;
         _safeMint(addr, tokenIndex);
     }
 
