@@ -42,16 +42,13 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
     function hasMinted(uint512 memory nullifierRange) public view returns (uint256) {
         for (uint256 i = 0; i < minted.length; i++) {
             if (
-                gt(nullifierRange, incr64Bytes(minted[i])) || 
-                gt(minted[i], incr64Bytes(nullifierRange))
+                !(
+                    gt(nullifierRange, incr64Bytes(minted[i])) || 
+                    gt(minted[i], incr64Bytes(nullifierRange))
+                )
             ) {
-                // ok
-            }
-            else {
                 return 1;
             }
-
-            
         }
         return 0;
     }
