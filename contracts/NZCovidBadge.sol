@@ -30,7 +30,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
     function incr64Bytes(uint512 memory x) internal pure returns (uint512 memory) {
         // TODO: overflow?
-        uint512 memory ret = uint512(uint256(bytes32(x.hi)), uint256(bytes32(x.lo)));
+        uint512 memory ret = uint512(x.hi, x.lo);
         ret.hi++;
         return ret;
     }
