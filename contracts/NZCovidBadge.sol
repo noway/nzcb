@@ -15,14 +15,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
     uint public supply;
     uint512[] public minted;
 
-    uint internal constant WORD_SIZE = 32;
-
     constructor(string memory _name, string memory _symbol) ERC721(_name = "NZ COVID Badge", _symbol = "NZCB") {}
-
-
-    function lt(uint512 memory x, uint512 memory y) internal pure returns (bool) {
-        return x.hi < y.hi || (x.hi == y.hi && x.lo < y.lo);
-    }
 
     function gt(uint512 memory x, uint512 memory y) internal pure returns (bool) {
         return x.hi > y.hi || (x.hi == y.hi && x.lo > y.lo);
