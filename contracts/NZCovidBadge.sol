@@ -53,7 +53,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
     // Perform bit fiddling to get pubIdentity from the signals.
     // TODO: test this function
-    function getPubIdentity(bytes32[4] memory input) internal pure returns (bytes memory, bytes memory, bytes32, uint256, address) {
+    function getPubIdentity(bytes32[4] memory input) internal pure returns (uint256, uint256, bytes32, uint256, address) {
 
         bytes memory nullifierRange1 = new bytes(32);
         bytes memory nullifierRange2 = new bytes(32);
@@ -141,7 +141,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             addr := mload(add(addrBytes, 0x14))
         } 
 
-        return (nullifierRange1, nullifierRange2, bytes32(toBeSignedHash), _exp, addr);
+        return (uint256(bytes32(nullifierRange1)), uint256(bytes32(nullifierRange2)), bytes32(toBeSignedHash), _exp, addr);
     }
 
     function mint(
@@ -156,10 +156,8 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         bytes32 input2 = bytes32(input[2]);
         bytes32 input3 = bytes32(input[3]);
 
-        (bytes memory nullifierRange1, bytes memory nullifierRange2, bytes32 toBeSignedHash, uint256 _exp, address addr) = getPubIdentity([input0, input1, input2, input3]);
-
-        // bytes memory nullifierRange = concat(nullifierRange1, nullifierRange2);
-        uint512 memory nullifierRange = uint512(uint256(bytes32(nullifierRange1)), uint256(bytes32(nullifierRange2)));
+        (uint256 nullifierRange1, uint256 nullifierRange2, bytes32 toBeSignedHash, uint256 _exp, address addr) = getPubIdentity([input0, input1, input2, input3]);
+        uint512 memory nullifierRange = uint512(nullifierRange1, nullifierRange2);
 
         require(verifyProof(a, b, c, input), "Invalid proof");
         require(validateSignature(toBeSignedHash, rs, [0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD, 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D]), "Invalid signature");
