@@ -12,7 +12,6 @@ struct uint512 {
 
 contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
-    uint public supply;
     uint512[] public minted;
 
     constructor(string memory _name, string memory _symbol) ERC721(_name = "NZ COVID Badge", _symbol = "NZCB") {}
@@ -29,7 +28,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
     }
 
     function totalSupply() public view returns (uint) {
-        return supply;
+        return minted.length;
     }
 
     function hasMinted(uint512 memory nullifierRangeStart) public view returns (uint256) {
@@ -165,11 +164,11 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         require(hasMinted(nullifierRange) == 0, "Already minted");
 
         minted.push(nullifierRange);
-        _safeMint(addr, supply++);
+        _safeMint(addr, minted.length - 1);
     }
 
     function tokenURI(uint256 id) override public view returns (string memory) {
-        require(id < supply, "URI query for nonexistent token");
+        require(id < minted.length, "URI query for nonexistent token");
         return "https://i.imgur.com/QYKQsql.jpg";
     }
 }
