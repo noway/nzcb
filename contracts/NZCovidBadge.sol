@@ -53,7 +53,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             ib = uint256(uint8(input0[31 - i]));
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
             // copy over first 31 bytes of nullifierHashPart
-            nullifierHashPart[i] = bytes1(uint8(ib));
+            nullifierHashPart[i] = bytes1(uint8(input0[31 - i]));
             unchecked { ++i; }
         }
         for (i = 0; i < 31;) {
@@ -61,11 +61,11 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
             // copy over the last byte of nullifierHashPart
             if (i < 1) {
-                nullifierHashPart[31 + i] = bytes1(uint8(ib));
+                nullifierHashPart[31 + i] = bytes1(uint8(input1[31 - i]));
             }
             // copy over the first 30 bytes of toBeSignedHash
             else {
-                toBeSignedHash[i - 1] = bytes1(uint8(ib));
+                toBeSignedHash[i - 1] = bytes1(uint8(input1[31 - i]));
             }
             unchecked { ++i; }
         }
@@ -74,7 +74,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
             // copy over the last 2 bytes of toBeSignedHash
             if (i < 2) {
-                toBeSignedHash[30 + i] = bytes1(uint8(ib));
+                toBeSignedHash[30 + i] = bytes1(uint8(input2[31 - i]));
             }
             else if (i < 6) {
                 // do nothing
@@ -91,7 +91,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             }
             // copy over the address
             else if (i < 30) {
-                addrBytes[i - 10] = bytes1(uint8(ib));
+                addrBytes[i - 10] = bytes1(uint8(input2[31 - i]));
             }
             unchecked { ++i; }
         }
