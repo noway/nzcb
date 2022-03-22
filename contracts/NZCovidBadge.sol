@@ -33,66 +33,49 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
     // TODO: test this function
     function getPubIdentity(bytes32[3] memory input) internal pure returns (bytes32, bytes32, uint256, address) {
 
-        bytes32 input0 = bytes32(input[0]);
-        bytes32 input1 = bytes32(input[1]);
-        bytes32 input2 = bytes32(input[2]);
-
         bytes memory nullifierHashPart = new bytes(32);
         bytes memory toBeSignedHash = new bytes(32);
         bytes memory expBytes = new bytes(32);
         bytes memory addrBytes = new bytes(20);
 
         uint256 i;
-        uint256 ib;
 
         // Extract 31 bytes of data from every signal
         for (i = 0; i < 31;) {
             // Here and bellow:
             // Reverse bits of every byte in input to get the data.
             // From here https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
-            ib = uint256(uint8(input0[31 - i]));
-            ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
             // copy over first 31 bytes of nullifierHashPart
-            nullifierHashPart[i] = bytes1(uint8(input0[31 - i]));
+            nullifierHashPart[i] = bytes1(uint8(input[0][i]));
             unchecked { ++i; }
         }
-        for (i = 0; i < 31;) {
-            ib = uint256(uint8(input1[31 - i]));
-            ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
-            // copy over the last byte of nullifierHashPart
-            if (i < 1) {
-                nullifierHashPart[31 + i] = bytes1(uint8(input1[31 - i]));
-            }
+        // copy over the last byte of nullifierHashPart
+        nullifierHashPart[31] = bytes1(uint8(input[1][0]));
+
+        for (i = 1; i < 31;) {
             // copy over the first 30 bytes of toBeSignedHash
-            else {
-                toBeSignedHash[i - 1] = bytes1(uint8(input1[31 - i]));
-            }
+            toBeSignedHash[i - 1] = bytes1(uint8(input[1][i]));
             unchecked { ++i; }
         }
-        for (i = 0; i < 31;) {
-            ib = uint256(uint8(input2[31 - i]));
-            ib = (ib * 0x0202020202 & 0x010884422010) % 1023;
-            // copy over the last 2 bytes of toBeSignedHash
-            if (i < 2) {
-                toBeSignedHash[30 + i] = bytes1(uint8(input2[31 - i]));
-            }
-            else if (i < 6) {
-                // do nothing
-            }
+        // copy over the last 2 bytes of toBeSignedHash
+        toBeSignedHash[30] = bytes1(uint8(input[2][0]));
+        toBeSignedHash[31] = bytes1(uint8(input[2][1]));
+
+        for (i = 6; i < 10;) {
             // copy over exp value
-            else if (i < 10) {
-                // filling out the following bytes in expBytes:
-                // byte #28
-                // byte #29
-                // byte #30
-                // byte #31
-                // that way, we can read those bytes as uint256 exp
-                expBytes[i + 22] = bytes1(uint8(input2[i]));
-            }
+            // filling out the following bytes in expBytes:
+            // byte #28
+            // byte #29
+            // byte #30
+            // byte #31
+            // that way, we can read those bytes as uint256 exp
+            expBytes[i + 22] = bytes1(uint8(input[2][i]));
+            unchecked { ++i; }
+        }
+
+        for (i = 10; i < 30;) {
             // copy over the address
-            else if (i < 30) {
-                addrBytes[i - 10] = bytes1(uint8(input2[31 - i]));
-            }
+            addrBytes[i - 10] = bytes1(uint8(input[2][i]));
             unchecked { ++i; }
         }
 
@@ -123,7 +106,6 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         bytes32 input2 = bytes32(input[2]);
 
         (bytes32 nullifierHashPart, bytes32 toBeSignedHash, uint256 _exp, address addr) = getPubIdentity([input0, input1, input2]);
-        // uint512 memory nullifierRange = uint512(nullifierRange1, nullifierRange2);
 
         require(verifyProof(a, b, c, input), "Invalid proof");
         require(validateSignature(toBeSignedHash, rs, [0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD, 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D]), "Invalid signature");
