@@ -100,12 +100,11 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
             uint256[2] memory c,
             uint256[3] memory input, uint256[2] memory rs) public payable {
 
-
-        bytes32 input0 = bytes32(input[0]);
-        bytes32 input1 = bytes32(input[1]);
-        bytes32 input2 = bytes32(input[2]);
-
-        (bytes32 nullifierHashPart, bytes32 toBeSignedHash, uint256 _exp, address addr) = getPubIdentity([input0, input1, input2]);
+        (bytes32 nullifierHashPart, bytes32 toBeSignedHash, uint256 _exp, address addr) = getPubIdentity([
+            bytes32(input[0]), 
+            bytes32(input[1]), 
+            bytes32(input[2])
+        ]);
 
         require(verifyProof(a, b, c, input), "Invalid proof");
         require(validateSignature(toBeSignedHash, rs, [0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD, 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D]), "Invalid signature");
