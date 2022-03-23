@@ -5,11 +5,6 @@ import "./ERC721.sol";
 import "./VerifierExample.sol";
 import "./EllipticCurve.sol";
 
-struct uint512 {
-    uint256 hi;
-    uint256 lo;
-}
-
 contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
 
     uint public supply;
