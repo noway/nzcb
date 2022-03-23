@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.11;
+pragma solidity >=0.8.0;
 
 import "./ERC721.sol";
 import "./VerifierExample.sol";
