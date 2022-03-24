@@ -36,7 +36,7 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         uint256 i;
 
         // Extract 31 bytes of data from every signal
-        for (i = 0; i < 31;) {
+        for (i = 1; i < 32;) {
             // Here and bellow:
             // Reverse bits of every byte in input to get the data.
             // From here https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
@@ -47,14 +47,14 @@ contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
         // copy over the last byte of nullifierHashPart
         nullifierHashPart[31] = bytes1(uint8(input[1][0]));
 
-        for (i = 1; i < 31;) {
+        for (i = 2; i < 32;) {
             // copy over the first 30 bytes of toBeSignedHash
-            toBeSignedHash[i - 1] = bytes1(uint8(input[1][i]));
+            toBeSignedHash[i - 2] = bytes1(uint8(input[1][i]));
             unchecked { ++i; }
         }
         // copy over the last 2 bytes of toBeSignedHash
-        toBeSignedHash[30] = bytes1(uint8(input[2][0]));
-        toBeSignedHash[31] = bytes1(uint8(input[2][1]));
+        toBeSignedHash[30] = bytes1(uint8(input[2][1]));
+        toBeSignedHash[31] = bytes1(uint8(input[2][2]));
 
         for (i = 6; i < 10;) {
             // copy over exp value
