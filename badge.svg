@@ -86,7 +86,6 @@
   </g>
   <defs>
     <filter id="d" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
       <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
       <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
       <feOffset dx="-1" dy="1"/>
@@ -100,7 +99,6 @@
       <feBlend in2="a" result="b"/>
     </filter>
     <filter id="e" width="114" height="114" x="71" y="71" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
       <feGaussianBlur in="BackgroundImage" stdDeviation="2"/>
       <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_58_2276"/>
       <feBlend in="SourceGraphic" in2="effect1_backgroundBlur_58_2276" result="shape"/>
@@ -111,7 +109,6 @@
       <feBlend in2="shape" result="b"/>
     </filter>
     <filter id="b" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
       <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
       <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
       <feOffset dx="-1" dy="1"/>
