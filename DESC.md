@@ -52,3 +52,5 @@ you can verify that the key matches by running `make plonk` and then comparing t
 - gets the first 256 bits of the nullifierHash to get the blinded nullifierHash (aka `nullifierHashPart`)
 - takes sha256 hash of `ToBeSigned` value to get the `toBeSignedHash`
 - exports `nullifierHashPart`, `toBeSignedHash`, `exp` as well as `data` which is pass-through data
+
+You can find a javascript version of the ZK SNARK in `nzcpCircom.ts` (`getNZCPPubIdentity` function)
