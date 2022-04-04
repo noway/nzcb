@@ -39,3 +39,16 @@ If multiple users to use the `mint` function, their credSubjHash would be publis
 powersOfTau28_hez_final_22.ptau from https://github.com/iden3/snarkjs#7-prepare-phase-2 was used to generate the ZK SNARK verification key. Blake2b hash is 0d64f63dba1a6f11139df765cb690da69d9b2f469a1ddd0de5e4aa628abb28f787f04c6a5fb84a235ec5ea7f41d0548746653ecab0559add658a83502d1cb21b
 
 you can verify that the key matches by running `make plonk` and then comparing the `nzcp_example_final.zkey` or `nzcp_live_final.zkey`
+
+### How does the ZK SNARK work?
+- Snark takes in `ToBeSigned` value as well as pass-through `data`
+- parses `ToBeSigned` as CBOR
+- finds `exp` (expiration date) value of the pass
+- finds `vc` map in it (verified credential)
+- jumps to the position of `credentialSubject` which is assumed to be at the position of `vc` + 171
+- gets `givenName`, `familyName` and `dob` out of `credetialSubject`
+- constructs the nullifier in the form of `${givenName},${familyName},${dob}`
+- hashes the nullifier as sha512 to get the `nullifierHash`
+- gets the first 256 bits of the nullifierHash to get the blinded nullifierHash (aka `nullifierHashPart`)
+- takes sha256 hash of `ToBeSigned` value to get the `toBeSignedHash`
+- exports `nullifierHashPart`, `toBeSignedHash`, `exp` as well as `data` which is pass-through data
