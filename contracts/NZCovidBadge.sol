@@ -5,7 +5,7 @@ import "./ERC721.sol";
 import "./VerifierExample.sol";
 import "./EllipticCurve.sol";
 
-contract NZCOVIDBadge is ERC721, Verifier, EllipticCurve {
+contract NZCOVIDBadge is ERC721, PlonkVerifier, EllipticCurve {
 
     uint public supply;
     mapping(bytes32 => uint256) public minted;
