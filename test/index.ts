@@ -11,9 +11,9 @@ const b: [[bigint, bigint],[bigint, bigint]] =
 
 const c: [bigint, bigint] = [1028546350178609515692678068031149437504661244443131952435099557891040235077n, 10879563735156659176541504877990982450500988408022307877598352088723069095847n]
 
-const input: [bigint, bigint, bigint] = [
-  8464235439336389695359576364537904521787463454426143836621154307990710930n, 334204042160295982690797293769892102755483197293558786265320143920457223185n, 430989588176825940781496969207245773238692149205558489568811355968561479680n
-]
+// const input: [bigint, bigint, bigint] = [
+//   8464235439336389695359576364537904521787463454426143836621154307990710930n, 334204042160295982690797293769892102755483197293558786265320143920457223185n, 430989588176825940781496969207245773238692149205558489568811355968561479680n
+// ]
 
 
 const A = [ "17285857194286030951643413384080770128102555891376275650920632385206886588209", "8146744797527597683612285820739161785613066720976189539337401542346009411025", "1" ]
@@ -34,11 +34,10 @@ const eval_s1 = "245581223381763181115398381709173291740991302828802067918080773
 const eval_s2 = "18283024571994954244371580939691607922437711646043720896247050161012382161604"
 const eval_zw = "20841814415782754133466958283685247955238275734380821043703696797913083330243"
 const protocol = "plonk"
+const proof = "0x1b32670a37e83f8e358e6991cd255b6699e9a0c0cbf02cc9fa107d93355ea80321cf4b121b8614f8a5331d0dd1c9245f598e69cf1a2594d43f8856efe84e1f2c2f0b9fd25f3cd6d79a81c91a28836b7e50b1c82c5458fd2986e20adbf1b5906e056dc87a4cff8abac9b4cc5140181f08463df88e3349d7c343e76842aa3193970c7f33f05d0458c6158a8346e13e19f16aff1b8a25f58de94b7d844d37d01bba0f0d7f9fd3770100519e05977a27e456b0eb51ff8594afd16ee4c83380a4dc6301cad93efecd4fe96bf6fb6b2b48fe71aad2f0f0014790aa52defe5f9c1258931178071c072843bc078bcb712451293b4500a8f0460fcb2805889632383c11660c6a4ecbdaaf2f25fbf556950a0d1ccbde9b900d8b4ac2973782fdb6d51c62db101f431245f978df767b76ba3535f5de3cbd4a88a7eae8a78775c79622e5363e1056d3f34fb75936ad3648463d6bf573cf872a26ac697b54f1bb689efa9c594128e561b4dd0b0d59175a3dba1066892525bde4e6a5f6138dc92ec5ae6b0ef399084f9da20e7549239511240e0056f816e2c71981c28c88d9d373eee3c16c2d3f1af4ae5105e24275db65eb964453d036fca7d1ac628cb06d99b420b362f841e52fcceaaa55ca48577ad678a888d4377bfebdbb1f69cf6fdad3df8b1be4ef9d022fdbf36636a1068ef3a2e72f1e2fb560064c7e5916afbed235a9561bfb19cc7b2770f882a737e46248a311de5183d0125558c0a79fd8f24bb17b2a2a1b266ef2045a2f533c2f1ca9cc1391fb19a1619c384d3dcc4c1aa93ed53a39d946b713320225b203b4c9e08ba45cd57b16663e05220b16c2bcb2101a93512f6e1b890a452444617139d2693bd03c588da6f2dc81e5dcf81988481a75f448a60631d7145116c0a8ad7d10a1f760d32389c7d2025dd9b946284db5ea5f65d7e61faabb92642d50580ca67820706a33dad61b511c3de7a4b553267ad10f013b023bc19d449220c8c4c0c9b0be00012e79103c6f07baf9039233c2bd34094b4cda5296fb0c2f07364e1fa4c374f027b222538b9e4478c396741d668be0fdc987ac21dca5725b2506751525d132f16cd6d4345bc01fb87f5b9022b009aa32242029a92ac2003e"
 
-const inputs = [
-"8464235439336389695359576364537904521787463454426143836621154307990710930",
-"334204042160295982690797293769892102755483197293558786265320143920457223185",
-"430989588176825346791827322625404962104722513508263561834535300537883033600",
+const input = [
+"8464235439336389695359576364537904521787463454426143836621154307990710930","334204042160295982690797293769892102755483197293558786265320143920457223185","430989588176825346791827322625404962104722513508263561834535300537883033600",
 ]
 
 // const credSubjHash = "0x5fb355822221720ea4ce6734e5a09e459d452574a19310c0cea7c141f43a3dab"
@@ -50,14 +49,17 @@ describe("NZCOVIDBadge only mint", function () {
   let covidBadge: NZCOVIDBadge
 
   before(async () => {
+    const PlonkVerifier = await ethers.getContractFactory("PlonkVerifier");
+    const plonk = await PlonkVerifier.deploy();
+
     const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
-    covidBadge = await NZCOVIDBadge.deploy("NZ COVID Badge", "NZCP");
+    covidBadge = await NZCOVIDBadge.deploy("NZ COVID Badge", "NZCP", plonk.address);
     await covidBadge.deployed();
   })
 
   it("Should mint", async function () {
-    const mintTx = await covidBadge.mint(a, b, c, input, [r, s])
-    await mintTx.wait();
+    const mintTx = await covidBadge.mint(proof, input, [r, s])
+    const res = await mintTx.wait();
   });
 });
 
@@ -65,21 +67,24 @@ describe("NZCOVIDBadge check logic", function () {
   let covidBadge: NZCOVIDBadge
 
   before(async () => {
+    const PlonkVerifier = await ethers.getContractFactory("PlonkVerifier");
+    const plonk = await PlonkVerifier.deploy();
+
     const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
-    covidBadge = await NZCOVIDBadge.deploy("NZ COVID Badge", "NZCP");
+    covidBadge = await NZCOVIDBadge.deploy("NZ COVID Badge", "NZCP", plonk.address);
     await covidBadge.deployed();
   })
 
   it("Should mint", async function () {
     await expect(covidBadge.tokenURI(0)).to.be.revertedWith("URI query for nonexistent token");
-    const mintTx = await covidBadge.mint(a, b, c, input, [r, s])
+    const mintTx = await covidBadge.mint(proof, input, [r, s])
     await mintTx.wait();
     expect(await covidBadge.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
   });
 
   it("Should not mint again", async function () {
     expect(await covidBadge.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
-    await expect(covidBadge.mint(a, b, c, input, [r, s])).to.be.revertedWith("Already minted");
+    await expect(covidBadge.mint(proof, input, [r, s])).to.be.revertedWith("Already minted");
   });
 
   // it("Should show as minted for this cred subj hash", async function () {
