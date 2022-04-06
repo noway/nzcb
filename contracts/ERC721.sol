@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity >=0.8.0;
+pragma solidity >=0.7.0 <0.9.0;
 
 /// @notice Modern, minimalist, and gas efficient ERC-721 implementation.
 /// @author Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol)
@@ -66,6 +66,14 @@ abstract contract ERC721 {
         emit ApprovalForAll(msg.sender, operator, approved);
     }
 
+    function extcodesze(address to) internal view returns (uint32) {
+        uint32 returnvar;
+        assembly {
+            returnvar := extcodesize(to)
+        }
+        return returnvar;
+    }
+
     function transferFrom(
         address from,
         address to,
@@ -82,11 +90,11 @@ abstract contract ERC721 {
 
         // Underflow of the sender's balance is impossible because we check for
         // ownership above and the recipient's balance can't realistically overflow.
-        unchecked {
+        // unchecked {
             balanceOf[from]--;
 
             balanceOf[to]++;
-        }
+        // }
 
         ownerOf[id] = to;
 
@@ -103,7 +111,7 @@ abstract contract ERC721 {
         transferFrom(from, to, id);
 
         require(
-            to.code.length == 0 ||
+            extcodesze(to) == 0 ||
                 ERC721TokenReceiver(to).onERC721Received(msg.sender, from, id, "") ==
                 ERC721TokenReceiver.onERC721Received.selector,
             "UNSAFE_RECIPIENT"
@@ -119,7 +127,7 @@ abstract contract ERC721 {
         transferFrom(from, to, id);
 
         require(
-            to.code.length == 0 ||
+            extcodesze(to) == 0 ||
                 ERC721TokenReceiver(to).onERC721Received(msg.sender, from, id, data) ==
                 ERC721TokenReceiver.onERC721Received.selector,
             "UNSAFE_RECIPIENT"
@@ -147,9 +155,9 @@ abstract contract ERC721 {
         require(ownerOf[id] == address(0), "ALREADY_MINTED");
 
         // Counter overflow is incredibly unrealistic.
-        unchecked {
+        // unchecked {
             balanceOf[to]++;
-        }
+        // }
 
         ownerOf[id] = to;
 
@@ -162,9 +170,9 @@ abstract contract ERC721 {
         require(ownerOf[id] != address(0), "NOT_MINTED");
 
         // Ownership check above ensures no underflow.
-        unchecked {
+        // unchecked {
             balanceOf[owner]--;
-        }
+        // }
 
         delete ownerOf[id];
 
@@ -181,7 +189,7 @@ abstract contract ERC721 {
         _mint(to, id);
 
         require(
-            to.code.length == 0 ||
+            extcodesze(to) == 0 ||
                 ERC721TokenReceiver(to).onERC721Received(msg.sender, address(0), id, "") ==
                 ERC721TokenReceiver.onERC721Received.selector,
             "UNSAFE_RECIPIENT"
@@ -196,7 +204,7 @@ abstract contract ERC721 {
         _mint(to, id);
 
         require(
-            to.code.length == 0 ||
+            extcodesze(to) == 0 ||
                 ERC721TokenReceiver(to).onERC721Received(msg.sender, address(0), id, data) ==
                 ERC721TokenReceiver.onERC721Received.selector,
             "UNSAFE_RECIPIENT"
