@@ -4,6 +4,8 @@ import { NZCOVIDBadge } from "../typechain";
 import { plonk } from 'snarkjs'
 import {utils} from 'ffjavascript';
 
+const unstringifyBigInts = utils.unstringifyBigInts;
+
 
 const proof0 = {
   A: [ "17285857194286030951643413384080770128102555891376275650920632385206886588209", "8146744797527597683612285820739161785613066720976189539337401542346009411025", "1" ],
@@ -116,7 +118,7 @@ describe("NZCOVIDBadge only mint", function () {
   })
 
   it("Should mint", async function () {
-    const calldata = await plonk.exportSolidityCallData(utils.unstringifyBigInts(currentProof), utils.unstringifyBigInts(publicSignals))
+    const calldata = await plonk.exportSolidityCallData(unstringifyBigInts(currentProof), unstringifyBigInts(publicSignals))
     const calldataSplit = calldata.split(',')
     const [proofFormatted, ...rest] = calldataSplit
     const publicSignalsFormatted = JSON.parse(rest.join(",")).map((x: string) => BigInt(x).toString())
@@ -139,7 +141,7 @@ describe("NZCOVIDBadge check logic", function () {
 
   it("Should mint", async function () {
     await expect(covidBadge.tokenURI(0)).to.be.revertedWith("URI query for nonexistent token");
-    const calldata = await plonk.exportSolidityCallData(utils.unstringifyBigInts(currentProof), utils.unstringifyBigInts(publicSignals))
+    const calldata = await plonk.exportSolidityCallData(unstringifyBigInts(currentProof), unstringifyBigInts(publicSignals))
     const calldataSplit = calldata.split(',')
     const [proofFormatted, ...rest] = calldataSplit
     const publicSignalsFormatted = JSON.parse(rest.join(",")).map((x: string) => BigInt(x).toString())
@@ -151,7 +153,7 @@ describe("NZCOVIDBadge check logic", function () {
 
   it("Should not mint again", async function () {
     expect(await covidBadge.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
-    const calldata = await plonk.exportSolidityCallData(utils.unstringifyBigInts(currentProof), utils.unstringifyBigInts(publicSignals))
+    const calldata = await plonk.exportSolidityCallData(unstringifyBigInts(currentProof), unstringifyBigInts(publicSignals))
     const calldataSplit = calldata.split(',')
     const [proofFormatted, ...rest] = calldataSplit
     const publicSignalsFormatted = JSON.parse(rest.join(",")).map((x: string) => BigInt(x).toString())
