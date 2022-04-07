@@ -34,10 +34,11 @@
     "solidity-coverage": "^0.7.16",
     "ts-node": "^10.1.0",
     "typechain": "^5.1.2",
-    "typescript": "^4.5.2"
-  },
-  "dependencies": {
+    "typescript": "^4.5.2",
     "ffjavascript": "^0.2.52",
     "snarkjs": "^0.4.16"
+  },
+  "engines": {
+    "node": ">=10.6.0"
   }
 }
