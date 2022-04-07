@@ -33,7 +33,7 @@ const input = [
   "430989588176825940781496969207245773238692149205558489568811355968561479680",
 ] as const
 
-// const credSubjHash = "0x5fb355822221720ea4ce6734e5a09e459d452574a19310c0cea7c141f43a3dab"
+const nullifierHashPart = "0x04ca63f107c06816c14bf8f3f93b6b4b3ea3a1d17240d25448062c6e6d6a92bd"
 
 const r = "0xD2E07B1DD7263D833166BDBB4F1A093837A905D7ECA2EE836B6B2ADA23C23154";
 const s = "0xFBA88A529F675D6686EE632B09EC581AB08F72B458904BB3396D10FA66D11477";
@@ -94,9 +94,9 @@ describe("NZCOVIDBadge check logic", function () {
   });
 
   // todo: update to blinded nullifier hash
-  // it("Should show as minted for this cred subj hash", async function () {
-  //   expect(await covidBadge.hasMinted(credSubjHash)).to.equal(1);
-  // });
+  it("Should show as minted for this cred subj hash", async function () {
+    expect(await covidBadge.hasMinted(nullifierHashPart)).to.equal(1);
+  });
 
   it("Should show the signer as owner for token id 0", async function () {
     expect(await covidBadge.getOwner(0)).to.equal("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
