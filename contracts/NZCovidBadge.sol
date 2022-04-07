@@ -34,33 +34,6 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
         return ownerOf[id];
     }
 
-    function bytesToBytes32Array(bytes memory data)
-        public
-        pure
-        returns (bytes32)
-    {
-        // Find 32 bytes segments nb
-        uint256 dataNb = data.length / 32;
-        // Create an array of dataNb elements
-        bytes32[] memory dataList = new bytes32[](dataNb);
-        // Start array index at 0
-        uint256 index = 0;
-        // Loop all 32 bytes segments
-        for (uint256 i = 32; i <= data.length; i = i + 32) {
-            bytes32 temp;
-            // Get 32 bytes from data
-            assembly {
-                temp := mload(add(data, i))
-            }
-            // Add extracted 32 bytes to list
-            dataList[index] = temp;
-            index++;
-        }
-        // Return data list
-        return (dataList[0]);
-    }
-
-
     // Perform bit fiddling to get pubIdentity from the signals.
     // TODO: test this function
     function getPubIdentity(bytes32[3] memory input) internal pure returns (bytes32, bytes32, uint256, address) {
@@ -79,9 +52,7 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
             // From here https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64BitsDiv
             // copy over first 31 bytes of nullifierHashPart
             nullifierHashPart[i - 1] = bytes1(uint8(input[0][i]));
-            // unchecked { 
-                ++i; 
-            // }
+            unchecked { ++i; }
         }
         // copy over the last byte of nullifierHashPart
         nullifierHashPart[31] = bytes1(uint8(input[1][1]));
@@ -89,9 +60,7 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
         for (i = 2; i < 32;) {
             // copy over the first 30 bytes of toBeSignedHash
             toBeSignedHash[i - 2] = bytes1(uint8(input[1][i]));
-            // unchecked { 
-                ++i; 
-            // }
+            unchecked { ++i; }
         }
         // copy over the last 2 bytes of toBeSignedHash
         toBeSignedHash[30] = bytes1(uint8(input[2][1]));
@@ -106,9 +75,9 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
         for (i = 7; i < 27;) {
             // copy over the address
             addrBytes[i - 7] = bytes1(uint8(input[2][i]));
-            // unchecked { 
+            unchecked { 
                 ++i; 
-            // }
+            }
         }
 
         // convert exp to uint256
@@ -123,7 +92,7 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
             addr := mload(add(addrBytes, 0x14))
         } 
 
-        return (bytesToBytes32Array(nullifierHashPart), bytesToBytes32Array(toBeSignedHash), _exp, addr);
+        return (bytes32(nullifierHashPart), bytes32(toBeSignedHash), _exp, addr);
     }
 
     function mint(bytes memory proof, uint[] memory input, 
