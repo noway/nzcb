@@ -1,7 +1,8 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { NZCOVIDBadge } from "../typechain";
-
+import { plonk } from 'snarkjs'
+import {utils} from 'ffjavascript';
 
 
 const proof0 = {
@@ -72,12 +73,14 @@ const publicSignals = [
   "8464235439336389695359576364537904521787463454426143836621154307990710930",
   "334204042160295982690797293769892102755483197293558786265320143920457223185",
   "430989588176825940781496969207245773238692149205558489568811355968561479680",
-] as const
+] 
 
 // const credSubjHash = "0x5fb355822221720ea4ce6734e5a09e459d452574a19310c0cea7c141f43a3dab"
 
 const r = "0xD2E07B1DD7263D833166BDBB4F1A093837A905D7ECA2EE836B6B2ADA23C23154";
 const s = "0xFBA88A529F675D6686EE632B09EC581AB08F72B458904BB3396D10FA66D11477";
+
+const currentProof = proof2
 
 describe("NZCOVIDBadge only mint", function () {
   let covidBadge: NZCOVIDBadge
@@ -92,7 +95,11 @@ describe("NZCOVIDBadge only mint", function () {
   })
 
   it("Should mint", async function () {
-    const mintTx = await covidBadge.mint(proof, input, [r, s])
+    const calldata = await plonk.exportSolidityCallData(utils.unstringifyBigInts(currentProof), utils.unstringifyBigInts(publicSignals))
+    const calldataSplit = calldata.split(',')
+    const [proofFormatted, ...rest] = calldataSplit
+    const publicSignalsFormatted = JSON.parse(rest.join(",")).map((x: string) => BigInt(x).toString())
+    const mintTx = await covidBadge.mint(proofFormatted, publicSignalsFormatted, [r, s])
     const res = await mintTx.wait();
   });
 });
@@ -111,14 +118,24 @@ describe("NZCOVIDBadge check logic", function () {
 
   it("Should mint", async function () {
     await expect(covidBadge.tokenURI(0)).to.be.revertedWith("URI query for nonexistent token");
-    const mintTx = await covidBadge.mint(proof, input, [r, s])
+    const calldata = await plonk.exportSolidityCallData(utils.unstringifyBigInts(currentProof), utils.unstringifyBigInts(publicSignals))
+    const calldataSplit = calldata.split(',')
+    const [proofFormatted, ...rest] = calldataSplit
+    const publicSignalsFormatted = JSON.parse(rest.join(",")).map((x: string) => BigInt(x).toString())
+
+    const mintTx = await covidBadge.mint(proofFormatted, publicSignalsFormatted, [r, s])
     await mintTx.wait();
     expect(await covidBadge.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
   });
 
   it("Should not mint again", async function () {
     expect(await covidBadge.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
-    await expect(covidBadge.mint(proof, input, [r, s])).to.be.revertedWith("Already minted");
+    const calldata = await plonk.exportSolidityCallData(utils.unstringifyBigInts(currentProof), utils.unstringifyBigInts(publicSignals))
+    const calldataSplit = calldata.split(',')
+    const [proofFormatted, ...rest] = calldataSplit
+    const publicSignalsFormatted = JSON.parse(rest.join(",")).map((x: string) => BigInt(x).toString())
+    
+    await expect(covidBadge.mint(proofFormatted, publicSignalsFormatted, [r, s])).to.be.revertedWith("Already minted");
   });
 
   // todo: update to blinded nullifier hash
