@@ -40,7 +40,7 @@ const s = "0xFBA88A529F675D6686EE632B09EC581AB08F72B458904BB3396D10FA66D11477";
 
 const currentProof = proof
 
-async function formatArgs(proofJS: any, publicSignalsJS: any) {
+async function getVerifyArgs(proofJS: any, publicSignalsJS: any) {
     const calldata = await plonk.exportSolidityCallData(unstringifyBigInts(proofJS), unstringifyBigInts(publicSignalsJS))
     const calldataSplit = calldata.split(',')
     const [proof, ...rest] = calldataSplit
@@ -61,7 +61,7 @@ describe("NZCOVIDBadge only mint", function () {
   })
 
   it("Should mint", async function () {
-    const { proof, publicSignals } = await formatArgs(currentProof, input)
+    const { proof, publicSignals } = await getVerifyArgs(currentProof, input)
     const mintTx = await covidBadge.mint(proof, publicSignals, [r, s])
     const res = await mintTx.wait();
   });
@@ -81,7 +81,7 @@ describe("NZCOVIDBadge check logic", function () {
 
   it("Should mint", async function () {
     await expect(covidBadge.tokenURI(0)).to.be.revertedWith("URI query for nonexistent token");
-    const { proof, publicSignals } = await formatArgs(currentProof, input)
+    const { proof, publicSignals } = await getVerifyArgs(currentProof, input)
     const mintTx = await covidBadge.mint(proof, publicSignals, [r, s])
     await mintTx.wait();
     expect(await covidBadge.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
@@ -89,7 +89,7 @@ describe("NZCOVIDBadge check logic", function () {
 
   it("Should not mint again", async function () {
     expect(await covidBadge.tokenURI(0)).to.equal("https://i.imgur.com/QYKQsql.jpg");
-    const { proof, publicSignals } = await formatArgs(currentProof, input)
+    const { proof, publicSignals } = await getVerifyArgs(currentProof, input)
     await expect(covidBadge.mint(proof, publicSignals, [r, s])).to.be.revertedWith("Already minted");
   });
 
