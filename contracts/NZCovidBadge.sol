@@ -126,9 +126,8 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
         return (bytesToBytes32Array(nullifierHashPart), bytesToBytes32Array(toBeSignedHash), _exp, addr);
     }
 
-    function mint(
-            bytes calldata proof,
-            uint[] memory input, uint256[2] memory rs) public payable {
+    function mint(bytes memory proof, uint[] memory input, 
+        uint256[2] memory rs) public payable {
 
         (bytes32 nullifierHashPart, bytes32 toBeSignedHash, uint256 _exp, address addr) = getPubIdentity([
             bytes32(input[0]), 
