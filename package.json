@@ -35,5 +35,9 @@
     "ts-node": "^10.1.0",
     "typechain": "^5.1.2",
     "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "ffjavascript": "^0.2.52",
+    "snarkjs": "^0.4.16"
   }
 }
