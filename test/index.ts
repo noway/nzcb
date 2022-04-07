@@ -41,11 +41,11 @@ const s = "0xFBA88A529F675D6686EE632B09EC581AB08F72B458904BB3396D10FA66D11477";
 const currentProof = proof
 
 async function getVerifyArgs(proofJS: any, publicSignalsJS: any) {
-    const calldata = await plonk.exportSolidityCallData(unstringifyBigInts(proofJS), unstringifyBigInts(publicSignalsJS))
-    const calldataSplit = calldata.split(',')
-    const [proof, ...rest] = calldataSplit
-    const publicSignals = JSON.parse(rest.join(",")).map((x: string) => BigInt(x).toString())
-    return { proof, publicSignals }
+  const calldata = await plonk.exportSolidityCallData(unstringifyBigInts(proofJS), unstringifyBigInts(publicSignalsJS))
+  const calldataSplit = calldata.split(',')
+  const [proof, ...rest] = calldataSplit
+  const publicSignals = JSON.parse(rest.join(",")).map((x: string) => BigInt(x).toString())
+  return { proof, publicSignals }
 }
 
 describe("NZCOVIDBadge only mint", function () {
