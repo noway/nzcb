@@ -158,8 +158,7 @@ describe("NZCOVIDBadge check logic", function () {
     ).to.be.revertedWith("Already minted");
   });
 
-  // todo: update to blinded nullifier hash
-  it("Should show as minted for this cred subj hash", async function () {
+  it("Should show as minted for this blinded nullifier hash", async function () {
     expect(await covidBadge.hasMinted(nullifierHashPart)).to.equal(1);
   });
 
