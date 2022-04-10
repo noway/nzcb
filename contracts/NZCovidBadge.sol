@@ -32,7 +32,6 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
     }
 
     // Perform bit fiddling to get pubIdentity from the signals.
-    // TODO: test this function
     function getPubIdentity(bytes32[3] memory input) internal pure returns (bytes32, bytes32, uint256, address) {
 
         bytes memory nullifierHashPart = new bytes(32);
