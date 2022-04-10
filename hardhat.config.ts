@@ -35,8 +35,11 @@ const config: HardhatUserConfig = {
   networks: {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
+    rinkeby: {
+      url: process.env.RINKEBY_URL || "",
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     ganache: {
       url: `http://127.0.0.1:7545`,
