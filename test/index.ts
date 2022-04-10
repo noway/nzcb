@@ -144,13 +144,13 @@ describe("NZCOVIDBadge check logic", function () {
     const mintTx = await covidBadge.mint(proof, publicSignals, [r, s]);
     await mintTx.wait();
     expect(await covidBadge.tokenURI(0)).to.equal(
-      "https://i.imgur.com/QYKQsql.jpg"
+      "ipfs://Qmd1j17wicAM2qrAw9ZNGc9YW2BLmrq7nEDUHUHQWKx86q"
     );
   });
 
   it("Should not mint again", async function () {
     expect(await covidBadge.tokenURI(0)).to.equal(
-      "https://i.imgur.com/QYKQsql.jpg"
+      "ipfs://Qmd1j17wicAM2qrAw9ZNGc9YW2BLmrq7nEDUHUHQWKx86q"
     );
     const { proof, publicSignals } = await getVerifyArgs(currentProof, input);
     await expect(
