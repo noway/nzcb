@@ -3,7 +3,6 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "./ERC721.sol";
 import "./EllipticCurve.sol";
-import "hardhat/console.sol";
 
 interface IPlonkVerifier {
     function verifyProof(bytes memory proof, uint[] memory pubSignals) external view returns (bool);
