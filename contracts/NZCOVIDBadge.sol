@@ -110,6 +110,6 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
 
     function tokenURI(uint256 id) override public view returns (string memory) {
         require(id < supply, "URI query for nonexistent token");
-        return "ipfs://QmT6VjiRQzi3fGVN77Ycw5XLu7XUQvuwAA2MsHTVFK7UHT";
+        return "ipfs://Qmd1j17wicAM2qrAw9ZNGc9YW2BLmrq7nEDUHUHQWKx86q";
     }
 }
