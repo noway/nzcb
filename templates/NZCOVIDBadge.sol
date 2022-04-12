@@ -4,6 +4,16 @@ pragma solidity >=0.7.0 <0.9.0;
 import "./ERC721.sol";
 import "./EllipticCurve.sol";
 
+#ifdef LIVE
+#define COORD_X 0x0D008A26EB2A32C4F4BBB0A3A66863546907967DC0DDF4BE6B2787E0DBB9DAD7
+#define COORD_Y 0x971816CEC2ED548F1FA999933CFA3D9D9FA4CC6B3BC3B5CEF3EAD453AF0EC662
+#define TOKEN_URI "ipfs://QmZ9CUMWm7qLfZioD1p822geAbcL1VcVcBsj6x6JMMD7FM"
+#else
+#define COORD_X 0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD
+#define COORD_Y 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D
+#define TOKEN_URI "ipfs://Qmd1j17wicAM2qrAw9ZNGc9YW2BLmrq7nEDUHUHQWKx86q"
+#endif
+
 interface IPlonkVerifier {
     function verifyProof(bytes memory proof, uint[] memory pubSignals) external view returns (bool);
 }
@@ -100,7 +110,7 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
         ]);
 
         require(verifier.verifyProof(proof, input), "Invalid proof");
-        require(validateSignature(toBeSignedHash, rs, [0xCD147E5C6B02A75D95BDB82E8B80C3E8EE9CAA685F3EE5CC862D4EC4F97CEFAD, 0x22FE5253A16E5BE4D1621E7F18EAC995C57F82917F1A9150842383F0B4A4DD3D]), "Invalid signature");
+        require(validateSignature(toBeSignedHash, rs, [COORD_X, COORD_Y]), "Invalid signature");
         require(block.timestamp < _exp, "Pass expired");
         require(minted[nullifierHashPart] == 0, "Already minted");
 
@@ -110,6 +120,6 @@ contract NZCOVIDBadge is ERC721, EllipticCurve {
 
     function tokenURI(uint256 id) override public view returns (string memory) {
         require(id < supply, "URI query for nonexistent token");
-        return "ipfs://Qmd1j17wicAM2qrAw9ZNGc9YW2BLmrq7nEDUHUHQWKx86q";
+        return TOKEN_URI;
     }
 }
