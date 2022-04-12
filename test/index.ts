@@ -4,8 +4,6 @@ import { NZCOVIDBadge } from "../typechain/";
 import { plonk } from "snarkjs";
 import { utils } from "ffjavascript";
 
-const unstringifyBigInts = utils.unstringifyBigInts;
-
 const EXAMPLE_PROOF = {
   A: [
     "13982932554605412989897374583643801297812477664729018255304957377686062899393",
@@ -86,8 +84,8 @@ const EXAMPLE_RS = [
 
 async function getVerifyArgs(proofJS: any, publicSignalsJS: any) {
   const calldata = await plonk.exportSolidityCallData(
-    unstringifyBigInts(proofJS),
-    unstringifyBigInts(publicSignalsJS)
+    utils.unstringifyBigInts(proofJS),
+    utils.unstringifyBigInts(publicSignalsJS)
   );
   const calldataSplit = calldata.split(",");
   const [proof, ...rest] = calldataSplit;
