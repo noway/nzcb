@@ -1,7 +1,9 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const PlonkVerifier = await ethers.getContractFactory("PlonkVerifier");
+  const PlonkVerifier = await ethers.getContractFactory(
+    "contracts/VerifierExample.sol:PlonkVerifier"
+  );
   const plonk = await PlonkVerifier.deploy();
 
   await plonk.deployed();
