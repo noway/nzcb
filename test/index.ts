@@ -32,7 +32,7 @@ describe("NZCOVIDBadgeExample only mint", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    covidBadge = await deployCovidBadge("Example");
+    ({ covidBadge } = await deployCovidBadge("Example"));
   });
 
   it("Should mint", async function () {
@@ -49,7 +49,7 @@ describe("NZCOVIDBadgeExample check logic", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    covidBadge = await deployCovidBadge("Example");
+    ({ covidBadge } = await deployCovidBadge("Example"));
   });
 
   it("Should mint", async function () {
@@ -96,7 +96,7 @@ describe("NZCOVIDBadgeLive only mint", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    covidBadge = await deployCovidBadge("Live");
+    ({ covidBadge } = await deployCovidBadge("Live"));
   });
 
   it("Should mint", async function () {
@@ -113,7 +113,7 @@ describe("NZCOVIDBadgeLive check logic", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    covidBadge = await deployCovidBadge("Live");
+    ({ covidBadge } = await deployCovidBadge("Live"));
   });
 
   it("Should mint", async function () {
