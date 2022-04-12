@@ -6,7 +6,7 @@ import { utils } from "ffjavascript";
 
 const unstringifyBigInts = utils.unstringifyBigInts;
 
-const proof = {
+const EXAMPLE_PROOF = {
   A: [
     "13982932554605412989897374583643801297812477664729018255304957377686062899393",
     "8744399671172372263799267541994418219728407537975424916611326943925544793290",
@@ -70,19 +70,19 @@ const proof = {
   curve: "bn128",
 } as const;
 
-const input = [
+const EXAMPLE_INPUT = [
   "8464235439336389695359576364537904521787463454426143836621154307990710930",
   "334204042160295982690797293769892102755483197293558786265320143920457223185",
   "430989588176825940781496969207245773238692149205558489568811355968561479680",
 ] as const;
 
-const nullifierHashPart =
+const EXAMPLE_NULLIFIER_HASH_PART =
   "0x04ca63f107c06816c14bf8f3f93b6b4b3ea3a1d17240d25448062c6e6d6a92bd";
 
-const r = "0xD2E07B1DD7263D833166BDBB4F1A093837A905D7ECA2EE836B6B2ADA23C23154";
-const s = "0xFBA88A529F675D6686EE632B09EC581AB08F72B458904BB3396D10FA66D11477";
-
-const currentProof = proof;
+const EXAMPLE_RS = [
+  "0xD2E07B1DD7263D833166BDBB4F1A093837A905D7ECA2EE836B6B2ADA23C23154",
+  "0xFBA88A529F675D6686EE632B09EC581AB08F72B458904BB3396D10FA66D11477",
+] as [string, string];
 
 async function getVerifyArgs(proofJS: any, publicSignalsJS: any) {
   const calldata = await plonk.exportSolidityCallData(
@@ -116,8 +116,11 @@ describe("NZCOVIDBadge only mint", function () {
   });
 
   it("Should mint", async function () {
-    const { proof, publicSignals } = await getVerifyArgs(currentProof, input);
-    const mintTx = await covidBadge.mint(proof, publicSignals, [r, s]);
+    const { proof, publicSignals } = await getVerifyArgs(
+      EXAMPLE_PROOF,
+      EXAMPLE_INPUT
+    );
+    const mintTx = await covidBadge.mint(proof, publicSignals, EXAMPLE_RS);
     await mintTx.wait();
   });
 });
@@ -144,8 +147,11 @@ describe("NZCOVIDBadge check logic", function () {
     await expect(covidBadge.tokenURI(0)).to.be.revertedWith(
       "URI query for nonexistent token"
     );
-    const { proof, publicSignals } = await getVerifyArgs(currentProof, input);
-    const mintTx = await covidBadge.mint(proof, publicSignals, [r, s]);
+    const { proof, publicSignals } = await getVerifyArgs(
+      EXAMPLE_PROOF,
+      EXAMPLE_INPUT
+    );
+    const mintTx = await covidBadge.mint(proof, publicSignals, EXAMPLE_RS);
     await mintTx.wait();
     expect(await covidBadge.tokenURI(0)).to.equal(
       "ipfs://Qmd1j17wicAM2qrAw9ZNGc9YW2BLmrq7nEDUHUHQWKx86q"
@@ -156,14 +162,17 @@ describe("NZCOVIDBadge check logic", function () {
     expect(await covidBadge.tokenURI(0)).to.equal(
       "ipfs://Qmd1j17wicAM2qrAw9ZNGc9YW2BLmrq7nEDUHUHQWKx86q"
     );
-    const { proof, publicSignals } = await getVerifyArgs(currentProof, input);
+    const { proof, publicSignals } = await getVerifyArgs(
+      EXAMPLE_PROOF,
+      EXAMPLE_INPUT
+    );
     await expect(
-      covidBadge.mint(proof, publicSignals, [r, s])
+      covidBadge.mint(proof, publicSignals, EXAMPLE_RS)
     ).to.be.revertedWith("Already minted");
   });
 
   it("Should show as minted for this blinded nullifier hash", async function () {
-    expect(await covidBadge.hasMinted(nullifierHashPart)).to.equal(1);
+    expect(await covidBadge.hasMinted(EXAMPLE_NULLIFIER_HASH_PART)).to.equal(1);
   });
 
   it("Should show the signer as owner for token id 0", async function () {
