@@ -7,6 +7,6 @@
     "outDir": "dist",
     "declaration": true
   },
-  "include": ["./scripts", "./test", "./typechain", "vendor.d.ts"],
-  "files": ["./hardhat.config.ts", "./test/EXAMPLE_PROOF.ts"]
+  "include": ["./scripts", "./test", "./typechain", "vendor.d.ts", "utils/deploy.ts"],
+  "files": ["./hardhat.config.ts", "./test/EXAMPLE_PROOF.ts", "./test/deployCovidBadge.ts"]
 }

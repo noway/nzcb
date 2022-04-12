@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
 import { NZCOVIDBadge } from "../typechain/";
 import { plonk } from "snarkjs";
 import { utils } from "ffjavascript";
@@ -15,6 +14,7 @@ import {
   LIVE_RS,
   LIVE_NULLIFIER_HASH_PART,
 } from "./liveStubs";
+import { deployCovidBadge } from "../utils/deploy";
 
 async function getVerifyArgs(proofJS: any, publicSignalsJS: any) {
   const calldata = await plonk.exportSolidityCallData(
@@ -28,24 +28,6 @@ async function getVerifyArgs(proofJS: any, publicSignalsJS: any) {
   );
   return { proof, publicSignals };
 }
-async function deployCovidBadge(variant: "Example" | "Live") {
-  const PlonkVerifier = await ethers.getContractFactory(
-    `contracts/Verifier${variant}.sol:PlonkVerifier`
-  );
-  const plonk = await PlonkVerifier.deploy();
-
-  const NZCOVIDBadge = await ethers.getContractFactory(
-    `contracts/NZCOVIDBadge${variant}.sol:NZCOVIDBadge`
-  );
-  const covidBadge = await NZCOVIDBadge.deploy(
-    "NZ COVID Badge",
-    "NZCP",
-    plonk.address
-  );
-  await covidBadge.deployed();
-  return covidBadge as NZCOVIDBadge;
-}
-
 describe("NZCOVIDBadgeExample only mint", function () {
   let covidBadge: NZCOVIDBadge;
 
