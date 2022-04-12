@@ -40,7 +40,7 @@ async function deployCovidBadge(variant: "Example" | "Live") {
   return covidBadge as NZCOVIDBadge;
 }
 
-describe("NZCOVIDBadge only mint", function () {
+describe("NZCOVIDBadgeExample only mint", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
@@ -57,7 +57,7 @@ describe("NZCOVIDBadge only mint", function () {
   });
 });
 
-describe("NZCOVIDBadge check logic", function () {
+describe("NZCOVIDBadgeExample check logic", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
