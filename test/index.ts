@@ -101,7 +101,7 @@ describe("NZCOVIDBadge only mint", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    const PlonkVerifier = await ethers.getContractFactory("PlonkVerifier");
+    const PlonkVerifier = await ethers.getContractFactory("contracts/VerifierExample.sol:PlonkVerifier");
     const plonk = await PlonkVerifier.deploy();
 
     const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
@@ -124,7 +124,7 @@ describe("NZCOVIDBadge check logic", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    const PlonkVerifier = await ethers.getContractFactory("PlonkVerifier");
+    const PlonkVerifier = await ethers.getContractFactory("contracts/VerifierExample.sol:PlonkVerifier");
     const plonk = await PlonkVerifier.deploy();
 
     const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
