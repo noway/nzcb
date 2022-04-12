@@ -94,23 +94,27 @@ async function getVerifyArgs(proofJS: any, publicSignalsJS: any) {
   );
   return { proof, publicSignals };
 }
+async function deployCovidBadge() {
+  const PlonkVerifier = await ethers.getContractFactory(
+    "contracts/VerifierExample.sol:PlonkVerifier"
+  );
+  const plonk = await PlonkVerifier.deploy();
+
+  const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
+  const covidBadge = await NZCOVIDBadge.deploy(
+    "NZ COVID Badge",
+    "NZCP",
+    plonk.address
+  );
+  await covidBadge.deployed();
+  return covidBadge;
+}
 
 describe("NZCOVIDBadge only mint", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    const PlonkVerifier = await ethers.getContractFactory(
-      "contracts/VerifierExample.sol:PlonkVerifier"
-    );
-    const plonk = await PlonkVerifier.deploy();
-
-    const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
-    covidBadge = await NZCOVIDBadge.deploy(
-      "NZ COVID Badge",
-      "NZCP",
-      plonk.address
-    );
-    await covidBadge.deployed();
+    covidBadge = await deployCovidBadge();
   });
 
   it("Should mint", async function () {
@@ -127,18 +131,7 @@ describe("NZCOVIDBadge check logic", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    const PlonkVerifier = await ethers.getContractFactory(
-      "contracts/VerifierExample.sol:PlonkVerifier"
-    );
-    const plonk = await PlonkVerifier.deploy();
-
-    const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
-    covidBadge = await NZCOVIDBadge.deploy(
-      "NZ COVID Badge",
-      "NZCP",
-      plonk.address
-    );
-    await covidBadge.deployed();
+    covidBadge = await deployCovidBadge();
   });
 
   it("Should mint", async function () {
