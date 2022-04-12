@@ -7,4 +7,5 @@ typechain
 #Hardhat files
 cache
 artifacts
-contracts/NZCOVIDBadge.sol
+contracts/NZCOVIDBadgeLive.sol
+contracts/NZCOVIDBadgeExample.sol

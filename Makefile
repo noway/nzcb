@@ -1,9 +1,11 @@
-.PHONY: contracts/NZCOVIDBadge.sol
+.PHONY: contracts/NZCOVIDBadgeLive.sol contracts/NZCOVIDBadgeExample.sol
 
-DFLAGS=
+all: contracts/NZCOVIDBadgeLive.sol contracts/NZCOVIDBadgeExample.sol
 
-all: contracts/NZCOVIDBadge.sol
-
-contracts/NZCOVIDBadge.sol: templates/NZCOVIDBadge.sol
+contracts/NZCOVIDBadgeLive.sol: templates/NZCOVIDBadge.sol
 	rm -f $@
-	cpp -P $(DFLAGS) $< > $@ 
+	cpp -P -DLIVE $< > $@ 
+
+contracts/NZCOVIDBadgeExample.sol: templates/NZCOVIDBadge.sol
+	rm -f $@
+	cpp -P $< > $@ 

@@ -8,7 +8,9 @@ async function main() {
 
   await plonk.deployed();
 
-  const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
+  const NZCOVIDBadge = await ethers.getContractFactory(
+    "contracts/NZCOVIDBadgeExample.sol:NZCOVIDBadge"
+  );
   const covidBadge = await NZCOVIDBadge.deploy(
     "NZ COVID Badge",
     "NZCP",

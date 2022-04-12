@@ -100,14 +100,16 @@ async function deployCovidBadge() {
   );
   const plonk = await PlonkVerifier.deploy();
 
-  const NZCOVIDBadge = await ethers.getContractFactory("NZCOVIDBadge");
+  const NZCOVIDBadge = await ethers.getContractFactory(
+    "contracts/NZCOVIDBadgeExample.sol:NZCOVIDBadge"
+  );
   const covidBadge = await NZCOVIDBadge.deploy(
     "NZ COVID Badge",
     "NZCP",
     plonk.address
   );
   await covidBadge.deployed();
-  return covidBadge;
+  return covidBadge as NZCOVIDBadge;
 }
 
 describe("NZCOVIDBadge only mint", function () {
