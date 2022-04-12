@@ -94,14 +94,14 @@ async function getVerifyArgs(proofJS: any, publicSignalsJS: any) {
   );
   return { proof, publicSignals };
 }
-async function deployCovidBadge() {
+async function deployCovidBadge(variant: "Example" | "Live") {
   const PlonkVerifier = await ethers.getContractFactory(
-    "contracts/VerifierExample.sol:PlonkVerifier"
+    `contracts/Verifier${variant}.sol:PlonkVerifier`
   );
   const plonk = await PlonkVerifier.deploy();
 
   const NZCOVIDBadge = await ethers.getContractFactory(
-    "contracts/NZCOVIDBadgeExample.sol:NZCOVIDBadge"
+    `contracts/NZCOVIDBadge${variant}.sol:NZCOVIDBadge`
   );
   const covidBadge = await NZCOVIDBadge.deploy(
     "NZ COVID Badge",
@@ -116,7 +116,7 @@ describe("NZCOVIDBadge only mint", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    covidBadge = await deployCovidBadge();
+    covidBadge = await deployCovidBadge("Example");
   });
 
   it("Should mint", async function () {
@@ -133,7 +133,7 @@ describe("NZCOVIDBadge check logic", function () {
   let covidBadge: NZCOVIDBadge;
 
   before(async () => {
-    covidBadge = await deployCovidBadge();
+    covidBadge = await deployCovidBadge("Example");
   });
 
   it("Should mint", async function () {
