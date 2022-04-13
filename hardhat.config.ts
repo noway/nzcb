@@ -41,6 +41,14 @@ const config: HardhatUserConfig = {
       url: process.env.RINKEBY_URL || "",
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
+    polygon: {
+      url: process.env.POLYGON_MAINNET_URL || "",
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
+    polygonMumbai: {
+      url: process.env.POLYGON_MUMBAI_URL || "",
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
     ganache: {
       url: `http://127.0.0.1:7545`,
       accounts: [`${process.env.GANACHE_PRIVATE_KEY}`],
