@@ -52,9 +52,9 @@ User specifies the address they would like to receive their NZ COVID Badge at as
 - Jumps to the position of `credentialSubject` which is assumed to be at the position of `vc` + 171
 - Gets `givenName`, `familyName` and `dob` out of `credentialSubject`
 - Constructs the nullifier in the form of `${givenName},${familyName},${dob}`
-- Hashes the nullifier as sha512 to get the `nullifierHash`
+- Hashes the nullifier as SHA512 to get the `nullifierHash`
 - Gets the first 256 bits of the nullifierHash to get the blinded nullifierHash (aka `nullifierHashPart`)
-- Takes sha256 hash of `ToBeSigned` value to get the `toBeSignedHash`
+- Takes SHA256 hash of `ToBeSigned` value to get the `toBeSignedHash`
 - Exports `nullifierHashPart`, `toBeSignedHash`, `exp` as well as `data` which is pass-through data
 
 You can find the javascript version of the circuit in `nzcpCircom.ts` (`getNZCPPubIdentity` function) in the Dapp repo.
