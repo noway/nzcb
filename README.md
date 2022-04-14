@@ -3,9 +3,14 @@
 ## Info & FAQ
 Read [the website](https://nzcb.netlify.app/) for more info.
 
-
 ## Technical info
 [Solmate's ERC721](https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol) is used alongside [snarkjs](https://github.com/iden3/snarkjs) PlonkVerifier. [EllipticCurve.sol](contracts/EllipticCurve.sol) is used for verifying NZ COVID Pass signatures. 
+
+## Develop
+- Create `.env` file in the root directory of the project
+- Populate it env variables
+    - Use `.env.example` as a reference.
+- Run `yarn`
 
 ## Test
 - `make`
