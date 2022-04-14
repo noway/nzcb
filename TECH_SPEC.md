@@ -31,7 +31,7 @@ credentialSubject = `${givenName},${familyName},${dob}`
 nullifierHashPart = SHA512(credentialSubject)[0:256]
 ```
 
-In the smart contract, we only allow `nullifierHashPart` to be used once (i.e., after minting the `nullifierHashPart` is considred 'spent')
+In the smart contract, we only allow `nullifierHashPart` to be used once (i.e., after minting the `nullifierHashPart` is considered 'spent')
 
 ## Not letting NZ COVID Pass leak
 
@@ -50,7 +50,7 @@ User specifies the address they would like to receive their NZ COVID Badge at as
 - Finds `exp` (expiration date) value of the pass
 - Finds `vc` map in it (verified credential)
 - Jumps to the position of `credentialSubject` which is assumed to be at the position of `vc` + 171
-- Gets `givenName`, `familyName` and `dob` out of `credetialSubject`
+- Gets `givenName`, `familyName` and `dob` out of `credentialSubject`
 - Constructs the nullifier in the form of `${givenName},${familyName},${dob}`
 - Hashes the nullifier as sha512 to get the `nullifierHash`
 - Gets the first 256 bits of the nullifierHash to get the blinded nullifierHash (aka `nullifierHashPart`)
