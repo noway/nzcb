@@ -38,6 +38,9 @@ Read [the website](https://nzcb.netlify.app/) for more info.
 - PlonkVerifier - https://rinkeby.etherscan.io/address/0xa63202d6f8c260da83ca3ef35d209b9af5ff7fea
 - NZCOVIDBadge - https://rinkeby.etherscan.io/address/0xba9104c6220310582bc6f7b8dcde445934f1bd5a
 
+## Tech Spec
+- [NZ COVID Badge - Tech Spec](https://github.com/noway/nzcb/blob/main/TECH_SPEC.md)
+
 ## Related repos
 - [NZ COVID Badge - Dapp repo](https://github.com/noway/nzcb-dapp)
 - [NZ COVID Badge - Contract repo](https://github.com/noway/nzcb)
