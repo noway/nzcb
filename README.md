@@ -1,4 +1,4 @@
-# NZ COVID Badge - contract repo
+# NZ COVID Badge - Contract repo
 
 ## Info & FAQ
 Read [the website](https://nzcb.netlify.app/) for more info.
