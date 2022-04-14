@@ -57,4 +57,4 @@ User specifies the address they would like to receive their NZ COVID Badge at as
 - Takes SHA256 hash of `ToBeSigned` value to get the `toBeSignedHash`
 - Exports `nullifierHashPart`, `toBeSignedHash`, `exp` as well as `data` which is pass-through data
 
-You can find the javascript version of the circuit in `nzcpCircom.ts` (`getNZCPPubIdentity` function) in the Dapp repo.
+You can find the javascript version of the circuit implemented as [getNZCPPubIdentity function](https://github.com/noway/nzcb-dapp/blob/main/src/nzcpCircom.ts#L32) in the Dapp repo.
