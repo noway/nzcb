@@ -1,56 +1,60 @@
-# NZCOVIDBadge
+# NZ COVID Badge
 
-An ERC721 collection gated by NZ COVID Passes.
+An ERC721 collection gated by [NZ COVID Passes](https://github.com/minhealthnz/nzcovidpass-spec).
 
-## Privacy
+## Goals
 
-NZCOVIDBadge balances the following goals:
+NZ COVID Badge balances the following goals:
 
-- Verify that the user has a valid NZCP
-- Allow only 1 NZCOVIDBadge per NZCP
+- Verify that the user has a valid NZ COVID Pass
+- Only allow 1 NZ COVID Badge per person
 - Don't let NZ COVID Pass leak
 - Don't let user identity leak
+- Protect user from MEV
 
-### Verification of NZCP
+## Verification of an NZ COVID Pass
 
-A NZ COVID Pass is valid if:
+An NZ COVID Pass is valid if:
 - Signature is valid and signed by NZ Ministry of Health
 - Pass is not expired
 
-In order to verify the signature, the full pass is not actually needed. Merely the SHA256 hash of the `ToBeSigned` value is sufficient.
+In order to verify the signature, the full pass is not needed. Merely the SHA256 hash of the `ToBeSigned` value is sufficient.
 
-We verify that the signature is valid by passing `toBeSignedHash=SHA256(ToBeSigned)` into `mint` function calldata through nzcp-circom packed signals.
+We verify that the signature is valid by computing `SHA256(ToBeSigned)` inside the circuit and then running the `EllipticCurve.validateSignature` function on the result in the solidity `mint` function. This way we know the hash belongs to the pass the user holds, even though we don't know the full pass itself.
 
-### One NZCOVIDBadge per NZCP
+## One NZ COVID Badge per person
 
-In order to prevent the user from having multiple NZCOVIDBadge, we limit the number of NZCOVIDBadge to 1 per credential subject hash. We define credential subject hash as
+In order to prevent the user from having multiple NZ COVID Badges, we limit the number of NZ COVID Badge to 1 per blinded nullifier hash (aka `nullifierHashPart`). We define blinded nullifier hash as:
 
 ```javascript
 credSubj = `${givenName},${familyName},${dob}`
-credSubjHash = SHA256(credSubj)
+nullifierHashPart = SHA512(credSubj)[0:256]
 ```
 
-You might notice that credSubjHash is susceptible to brute force attacks on the pre-image. Since there only are so many latinized givenName, familyName and dob combinations, having `credSubjHash` published as calldata might cause the users to get their identity revealed. The problem is exhaustarbated if an attacker already knows user's givenName and familyName and merely needs to guess the dob.
+In the smart contract, we only allow `nullifierHashPart` to be used once (i.e., after minting, the `nullifierHashPart` is considred 'spent')
 
-If multiple users to use the `mint` function, their credSubjHash would be published on blockchain as calldata. An attacker could then use hash table/rainbow table attack where they generate a table for some combinations of` credSubj` and compare it against all available `credSubjHash`s and thus reveal some or all users' identity.
+## Not letting NZ COVID Pass leak
 
+Since we're only sending the `ToBeSigned` value, `r` and `s` to the contract, it's not possible for an attacker to reconstruct the full pass. For full pass, the attacker will need to also have the credential subject (that is only passed to the contract as a blinded nullifier hash), `exp`, `nbf` as well as the `cti` (CWT ID). While `exp` value is passed to the contract as plain text, and `nbf` value is trivially derived, the `cti` (CWT ID) value is never revealed. Therefore, the attacker will need to fully reverse the blinded nullifier hash as well as guess `cti` (which is a 16-byte random string) to reconstruct the full pass. If we assume that an attacker already guessed the credential subject and that they have equipment which can generate 100 TH/s, they will need 14 billion years to guess the full pass.
 
-### ZK SNARK verification key generation
-powersOfTau28_hez_final_22.ptau from https://github.com/iden3/snarkjs#7-prepare-phase-2 was used to generate the ZK SNARK verification key. Blake2b hash is 0d64f63dba1a6f11139df765cb690da69d9b2f469a1ddd0de5e4aa628abb28f787f04c6a5fb84a235ec5ea7f41d0548746653ecab0559add658a83502d1cb21b
+## Not letting user identity leak
 
-you can verify that the key matches by running `make plonk` and then comparing the `nzcp_example_final.zkey` or `nzcp_live_final.zkey`
+An important property of `nullifierHashPart` is that it's blinded. Since we only output 256 bits of nullifier hash, it means that by spending 1 blinded nullifier hash, we spend 2<sup>256</sup> nullifiers. While the entropy of nullifier (`${givenName},${familyName},${dob}`) is low, the entropy of a blinded nullifier hash is high since a blinded nullifier hash will match not just 1 identity, but up to 2<sup>256</sup> identities. This makes it especially hard for an attacker to perform a brute force attack on the pre-image (`${givenName},${familyName},${dob}`) of a blinded nullifier hash.
 
-### How does the ZK SNARK work?
-- Snark takes in `ToBeSigned` value as well as pass-through `data`
-- parses `ToBeSigned` as CBOR
-- finds `exp` (expiration date) value of the pass
-- finds `vc` map in it (verified credential)
-- jumps to the position of `credentialSubject` which is assumed to be at the position of `vc` + 171
-- gets `givenName`, `familyName` and `dob` out of `credetialSubject`
-- constructs the nullifier in the form of `${givenName},${familyName},${dob}`
-- hashes the nullifier as sha512 to get the `nullifierHash`
-- gets the first 256 bits of the nullifierHash to get the blinded nullifierHash (aka `nullifierHashPart`)
-- takes sha256 hash of `ToBeSigned` value to get the `toBeSignedHash`
-- exports `nullifierHashPart`, `toBeSignedHash`, `exp` as well as `data` which is pass-through data
+## MEV protection
+User specifies the address they would like to receive their NZ COVID Badge at as an input signal to the circuit (pass-through `data`). This way, an MEV searcher would not be able to front-run user's transaction, since they would also need a full pass to compute the zero knowledge proof and set a different address.
 
-You can find a javascript version of the ZK SNARK in `nzcpCircom.ts` (`getNZCPPubIdentity` function)
+## Pseudocode of the circuit
+- Circuit takes in `ToBeSigned` value, pass-through `data`
+- Parses `ToBeSigned` as CBOR
+- Finds `exp` (expiration date) value of the pass
+- Finds `vc` map in it (verified credential)
+- Jumps to the position of `credentialSubject` which is assumed to be at the position of `vc` + 171
+- Gets `givenName`, `familyName` and `dob` out of `credetialSubject`
+- Constructs the nullifier in the form of `${givenName},${familyName},${dob}`
+- Hashes the nullifier as sha512 to get the `nullifierHash`
+- Gets the first 256 bits of the nullifierHash to get the blinded nullifierHash (aka `nullifierHashPart`)
+- Takes sha256 hash of `ToBeSigned` value to get the `toBeSignedHash`
+- Exports `nullifierHashPart`, `toBeSignedHash`, `exp` as well as `data` which is pass-through data
+
+You can find the javascript version of the circuit in `nzcpCircom.ts` (`getNZCPPubIdentity` function) in the Dapp repo.
