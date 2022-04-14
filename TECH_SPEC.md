@@ -1,4 +1,4 @@
-# NZ COVID Badge
+# NZ COVID Badge - Tech Spec
 
 An ERC721 collection gated by [NZ COVID Passes](https://github.com/minhealthnz/nzcovidpass-spec).
 
