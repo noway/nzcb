@@ -1,46 +1,47 @@
-# Advanced Sample Hardhat Project
+# NZ COVID Badge - contract repo
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+## Info & FAQ
+Read [the website](https://nzcb.netlify.app/) for more info.
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
 
-Try running some of the following tasks:
+## Technical info
+[Solmate's ERC721](https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol) is used alongside [snarkjs](https://github.com/iden3/snarkjs) PlonkVerifier. [EllipticCurve.sol](contracts/EllipticCurve.sol) is used for verifying NZ COVID Pass signatures. 
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.ts
-TS_NODE_FILES=true npx ts-node scripts/deploy.ts
-npx eslint '**/*.{js,ts}'
-npx eslint '**/*.{js,ts}' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
-```
+## Test
+- `make`
+- `npx hardhat test`
 
-# Etherscan verification
+## Deploy
+- `make`
+- Either `npx hardhat run scripts/deployLive.ts --network <network>` or `npx hardhat run scripts/deployExample.ts --network <network>`
 
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
+## Verify on Etherscan
+- `npx hardhat verify --network <network> <plonk_address>`
+- `npx hardhat verify --network <network> <nzcb_address> "NZ COVID Badge" "NZCP" <plonk_address>`
 
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
+## Deployed addresses
+### Live
+#### Polygon Mainnet
+- PlonkVerifier - https://polygonscan.com/address/0x69972e8fc3d0582748c8af359632812640357392
+- NZCOVIDBadge - https://polygonscan.com/address/0x14ffb19a685bb8ec4b925604280f7e441a343af9
 
-```shell
-hardhat run --network ropsten scripts/sample-script.ts
-```
+#### Polygon Mumbai
+- PlonkVerifier - https://mumbai.polygonscan.com/address/0x69972e8fc3d0582748c8af359632812640357392
+- NZCOVIDBadge - https://mumbai.polygonscan.com/address/0x14ffb19a685bb8ec4b925604280f7e441a343af9
 
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
+#### Ethereum Rinkeby
+- PlonkVerifier - https://rinkeby.etherscan.io/address/0x46f1d10566037532074ef3f4b3d812be4bc67689
+- NZCOVIDBadge - https://rinkeby.etherscan.io/address/0xd9f461702019a63318f5acb9cea63bcbdc186446
 
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
-```
+### Example
+#### Ethereum Rinkeby
+- PlonkVerifier - https://rinkeby.etherscan.io/address/0xa63202d6f8c260da83ca3ef35d209b9af5ff7fea
+- NZCOVIDBadge - https://rinkeby.etherscan.io/address/0xba9104c6220310582bc6f7b8dcde445934f1bd5a
 
-# Performance optimizations
+## Related repos
+- [NZ COVID Badge - Dapp repo](https://github.com/noway/nzcb-dapp)
+- [NZ COVID Badge - Contract repo](https://github.com/noway/nzcb)
+- [NZ COVID Badge - ZK-SNARK repo](https://github.com/noway/nzcb-circom)
 
-For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
+## License
+MIT License
