@@ -24,7 +24,7 @@ We verify that the signature is valid by computing `SHA256(ToBeSigned)` inside t
 
 ## One NZ COVID Badge per person
 
-In order to prevent the user from having multiple NZ COVID Badges, we limit the number of NZ COVID Badge to 1 per blinded nullifier hash (aka `nullifierHashPart`). We define blinded nullifier hash as:
+In order to prevent the user from having multiple NZ COVID Badges, we limit the number of NZ COVID Badges to 1 per blinded nullifier hash (aka `nullifierHashPart`). We define blinded nullifier hash as:
 
 ```javascript
 credentialSubject = `${givenName},${familyName},${dob}`
@@ -35,11 +35,11 @@ In the smart contract, we only allow `nullifierHashPart` to be used once (i.e., 
 
 ## Not letting NZ COVID Pass leak
 
-Since we're only sending the `ToBeSignedHash` value, `r`, `s` and `exp` of the pass to the contract, it's not possible for an attacker to reconstruct the full pass. For the full pass, the attacker will need to also have the credential subject (that is only passed to the contract as a blinded nullifier hash), `exp`, `nbf` as well as the `cti` (CWT ID). While `exp` value is passed to the contract as plain text, and `nbf` value is trivially derived, the `cti` (CWT ID) value is never revealed. Therefore, the attacker will need to fully reverse the blinded nullifier hash as well as guess the `cti` (which is a 16-byte random string issued by NZ Ministry of Health) to reconstruct the full pass. If we assume that an attacker already guessed the credential subject and that they have equipment which can generate 100 TH/s, they will need 14 billion years to guess the full pass.
+Since we're only sending the `ToBeSignedHash` value, `r`, `s` and `exp` of the pass to the contract, it's not possible for an attacker to reconstruct the full pass. For the full pass, the attacker will need to also have the credential subject (which is only passed to the contract as a blinded nullifier hash), `exp`, `nbf` as well as the `cti` (CWT ID). While `exp` value is passed to the contract as plain text, and `nbf` value is trivially derived, the `cti` (CWT ID) value is never revealed. Therefore, the attacker will need to fully reverse the blinded nullifier hash as well as guess the `cti` (which is a 16-byte random string issued by NZ Ministry of Health) to reconstruct the full pass. If we assume that an attacker already guessed the credential subject and that they have equipment which can generate 100 TH/s, they will need 14 billion years to brute-force the full pass.
 
 ## Not letting user identity leak
 
-An important property of `nullifierHashPart` is that it's blinded. Since we only output 256 bits of nullifier hash, it means that by spending 1 blinded nullifier hash, we spend 2<sup>256</sup> nullifiers. While the entropy of nullifier (`${givenName},${familyName},${dob}`) is low, the entropy of a blinded nullifier hash is high since a blinded nullifier hash will match not just 1 identity, but up to 2<sup>256</sup> identities. This makes it especially hard for an attacker to perform a brute force attack on the pre-image (`${givenName},${familyName},${dob}`) of a blinded nullifier hash.
+An important property of `nullifierHashPart` is that it's blinded. Since we only output 256 bits of nullifier hash, it means that by spending 1 blinded nullifier *hash*, we spend 2<sup>256</sup> nullifiers. While the entropy of a nullifier (`${givenName},${familyName},${dob}`) is low, the entropy of a blinded nullifier hash is high since a blinded nullifier hash will match not just 1 identity, but up to 2<sup>256</sup> identities. This makes it especially hard for an attacker to perform a brute force attack on the pre-image (`${givenName},${familyName},${dob}`) of a blinded nullifier hash.
 
 ## MEV protection
 User specifies the address they would like to receive their NZ COVID Badge at as an input signal to the circuit (the pass-through `data`). This way, an MEV searcher would not be able to front-run user's transaction, since they would also need a full pass to compute the zero knowledge proof and set a different address.
